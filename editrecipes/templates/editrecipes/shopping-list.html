@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping list</title>
+</head>
+<body>
+<ul>
+{% for i in ingredients%}
+    <li>{{i.name}}</li>
+{% endfor %}
+</ul>
+</body>
+</html>

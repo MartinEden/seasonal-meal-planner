@@ -1,0 +1,42 @@
+<table>
+    <colgroup>
+        <col>
+        {% for month in months %}
+        {% if month.month == this_month.month %}
+        <col class="this_month_col">
+        {% else %}
+        <col>
+        {% endif %}
+        {%endfor%}
+    </colgroup>
+    <tr>
+        <th>Recipe \ Month</th>
+        {% for month in months %}
+        {% if month.month == this_month.month %}
+            <td bgcolor="lightgrey"; width="5.5%">{{month.month}}</td>
+        {% else %}
+            <td width="5.5%">{{month.month}}</td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% for recipe in recipes %}
+    <tr>
+        <td>
+    <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></td>
+        {% for month in months %}
+            {% if month in recipe.months_in_peak_season %}
+                <td bgcolor="green"></td>
+            {% elif month in recipe.months_in_season %}
+                <td bgcolor="lightgreen"></td>
+            {% else %}
+                {% if month.month == this_month.month %}
+                    <td bgcolor="lightgrey"; width="5.5%"></td>
+                {% else %}
+                    <td bgcolor="white"></td>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+
+</table>

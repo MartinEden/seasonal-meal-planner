@@ -1,0 +1,90 @@
+{% if seasonal_recipes %}
+    The following recipes are in season this month:
+    <ul>
+    {% for recipe in seasonal_recipes %}
+        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+            {% if recipe.category %}
+            {{recipe.category}}
+            {% endif %}
+        </li>
+         {% endfor %}
+    </ul>
+{% else %}
+    <p>Nothing in season.</p>
+{% endif %}
+
+{% if just_in %}
+
+    These just came in:
+    <ul>
+    {% for recipe in just_in %}
+        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+            {% if recipe.category %}
+            {{recipe.category}}
+            {% endif %}
+        </li>
+         {% endfor %}
+    </ul>
+{% endif %}
+
+{% if last_chance %}
+
+    These are gone next month:
+    <ul>
+    {% for recipe in last_chance %}
+        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+            {% if recipe.category %}
+            {{recipe.category}}
+            {% endif %}
+        </li>
+         {% endfor %}
+    </ul>
+{% endif %}
+
+{% if other_seasonal %}
+
+    These are the remainder:
+    <ul>
+    {% for recipe in other_seasonal %}
+        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+            {% if recipe.category %}
+            {{recipe.category}}
+            {% endif %}
+        </li>
+         {% endfor %}
+    </ul>
+{% endif %}
+
+{% if always_available_recipes %}
+    The following recipes are always in season, but peak this month:
+    <ul>
+    {% for recipe in always_available_recipes %}
+        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+           {% if recipe.category %}
+            {{recipe.category}}
+            {% endif %}
+        </li>
+         {% endfor %}
+    </ul>
+{% else %}
+    <p>Nothing peaking this month.</p>
+{% endif %}
+
+{% if clashing_season_recipes %}
+    The following recipes require ingredients that are never in season at
+the same time:
+    <ul>
+    {% for recipe in clashing_season_recipes %}
+        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+            {% if recipe.category %}
+            {{recipe.category}}
+            {% endif %}
+        </li>
+         {% endfor %}
+    </ul>
+{% endif %}
+
+
+{% include "recipe-month.html" %}
+
+{% include "recipe-tags.html" %}

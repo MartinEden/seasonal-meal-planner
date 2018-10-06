@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{sidedish.name}}</title>
+</head>
+<body>
+<ul>
+    {% for ingredient in sidedish.ingredients.all %}
+    <li>{{ingredient.name}}</li>
+    {% endfor %}
+    </ul>
+
+In season in {{this_month.name}} are:
+<ul>
+    {% for ingredient in seasonal %}
+    <li>{{ingredient.name}}</li>
+    {% endfor %}
+    </ul>
+
+{% include "ingredients-month.html" with ingredients=sidedish.ingredients.all%}
+
+</body>
+</html>

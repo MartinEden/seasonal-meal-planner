@@ -1,0 +1,59 @@
+{% if recipe %}
+    <h1>{{ recipe.name }}</h1>
+
+    {% if valid_url %}
+        <div>
+            <a href="{{recipe.url}}">{{recipe.url}}</a>
+        </div>
+    {% else %}
+        <h3>{{recipe.url}}</h3>
+    {% endif %}
+
+    Ingredients:
+    <ul>
+        {% for i in recipe.ingredients.all %}
+           <li>{{ i.name }}</li>
+        {% endfor %}
+            </ul>
+    {% if dishes.any %}
+    with
+    <ul>
+        {% for key, value in dishes.items %}
+            <li><a href="{% url 'sidedish' key.name %}">{{ key.name }}</a>
+           (
+                {% for i in value %}
+                    {{ i.name }},
+                {% endfor %}
+            )
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    This is in season:
+    <ul>
+        {% for m in recipe.months_in_season %}
+           <li>{{ m }}</li>
+        {% endfor %}
+        </ul>
+
+    This is in peak season:
+    <ul>
+    {% for m in recipe.months_in_peak_season %}
+       <li>{{ m }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    Recipe not found
+{% endif %}
+
+{% include "ingredients-month.html" with ingredients=recipe.ingredients.all%}
+
+<br/>
+<br/>
+
+{% for dish in recipe.sidedish.all %}
+    {{dish.name}} ingredients
+<br/>
+    {% include "ingredients-month.html" with ingredients=dish.ingredients.all %}
+{% endfor %}

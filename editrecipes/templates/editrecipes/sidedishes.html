@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Side dishes</title>
+</head>
+<body>
+    <ul>
+    {% for dish in sidedishes.all %}
+        <li><a href="{% url 'sidedish' dish.name %}">{{ dish.name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

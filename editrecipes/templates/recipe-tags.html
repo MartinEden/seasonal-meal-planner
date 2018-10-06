@@ -1,0 +1,38 @@
+<table>
+    <tr>
+        <th>Recipe \ tag</th>
+        {% for tag in tags %}
+            <td>{{tag.name}}</td>
+        {% endfor %}
+    </tr>
+    {% for recipe in recipes %}
+    <tr>
+        <td>
+    <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></td>
+        {% for tag in tags %}
+            {% if tag in recipe.tags %}
+                {% if tag.name == "chili" %}
+                <td bgcolor="darkred"></td>
+                {% elif tag.name == "gluten" %}
+                <td bgcolor="lightyellow"></td>
+                {% elif tag.name == "dairy" %}
+                <td bgcolor="gold"></td>
+                {% elif tag.name == "mint" %}
+                <td bgcolor="green"></td>
+                {% elif tag.name == "meat" %}
+                <td bgcolor="red"></td>
+                {% elif tag.name == "peanut" %}
+                <td bgcolor="orange"></td>
+                {% elif tag.name == "alium" %}
+                <td bgcolor="palegreen"></td>
+                {% else %}
+                <td bgcolor="lightgrey"></td>
+                {% endif%}
+            {% else %}
+                    <td></td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+
+</table>

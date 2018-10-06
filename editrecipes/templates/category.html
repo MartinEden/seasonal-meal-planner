@@ -1,0 +1,7 @@
+
+<ul>
+    {% for recipe in category.recipes.all %}
+        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
