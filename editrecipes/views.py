@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
+from editrecipes.viewmodels import RecipeWithSeasonality
 from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient
 import datetime
 
@@ -43,24 +44,24 @@ def grid(request):
 
 def month(request, month_id = None):
     month = get_month(month_id)
-    seasonal_recipes = month.this_months_recipes()
     recipes = sorted(Recipe.objects.all(), key=lambda x: (-x.in_season(
         month.id), x.length_time_in_season(), x.season_start(month_id)))
-    just_in = month.this_but_not_last()
-    last_chance = month.this_but_not_next()
-    other_seasonal = sorted(set(seasonal_recipes) - set(just_in) - set(
-        last_chance), key=lambda x: x.length_time_in_season() )
+
+    seasonal_recipes = dict((r.name, RecipeWithSeasonality(r)) for r in
+                        month.this_months_recipes())
+    for r in month.this_but_not_last():
+        seasonal_recipes[r.name].just_in = True
+    for r in month.this_but_not_next():
+            seasonal_recipes[r.name].last_chance = True
+
     always_available_recipes = month.this_months_always_available_peak_recipes()
     clashing_season_recipes = [r for r in recipes if r.clashing_seasonality()]
     context = {
         'recipes': recipes,
         'always_available_recipes': always_available_recipes,
-        'seasonal_recipes': seasonal_recipes,
         'clashing_season_recipes': clashing_season_recipes,
-        'just_in':just_in,
-        'last_chance':last_chance,
-        'other_seasonal':other_seasonal,
-         'months': Month.objects.all(),
+        'seasonal_recipes': seasonal_recipes.values(),
+        'months': Month.objects.all(),
         'this_month': month,
         'tags': Tag.objects.all()
     }

@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
 from . import views
@@ -19,4 +21,4 @@ urlpatterns = [
     path('search', views.search, name='search'),
     path('search/<str:ingredient>/', views.search, name='search'),
     path('ingredients', views.ingredients)
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

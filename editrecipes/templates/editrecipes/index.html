@@ -1,59 +1,36 @@
-{% if seasonal_recipes %}
-    The following recipes are in season this month:
-    <ul>
-    {% for recipe in seasonal_recipes %}
-        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
-            {% if recipe.category %}
-            {{recipe.category}}
-            {% endif %}
-        </li>
-         {% endfor %}
-    </ul>
-{% else %}
-    <p>Nothing in season.</p>
-{% endif %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% if just_in %}
+{% block content %}
 
-    These just came in:
-    <ul>
-    {% for recipe in just_in %}
-        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
-            {% if recipe.category %}
-            {{recipe.category}}
-            {% endif %}
-        </li>
-         {% endfor %}
-    </ul>
-{% endif %}
+<div class="row">
+    <div class="col-12">
+        <h2>Seasonal recipes</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-lg-6 col-12">
+        <ul class="list-group">
+            {% for recipe in seasonal_recipes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    {% if recipe.just_in %}
+                    <img src="{% static 'editrecipes/star.svg' %}" alt="Just in" title="Just in">
+                    {% endif %}
+                    {% if recipe.last_chance %}
+                    <img src="{% static 'editrecipes/clock.svg' %}" alt="Last chance" title="Last chance">
+                    {% endif %}
 
-{% if last_chance %}
-
-    These are gone next month:
-    <ul>
-    {% for recipe in last_chance %}
-        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
-            {% if recipe.category %}
-            {{recipe.category}}
-            {% endif %}
-        </li>
-         {% endfor %}
-    </ul>
-{% endif %}
-
-{% if other_seasonal %}
-
-    These are the remainder:
-    <ul>
-    {% for recipe in other_seasonal %}
-        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
-            {% if recipe.category %}
-            {{recipe.category}}
-            {% endif %}
-        </li>
-         {% endfor %}
-    </ul>
-{% endif %}
+                    <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+                </span>
+                <span class="badge badge-primary badge-pill">
+                    {% if recipe.category %}{{recipe.category}}{% endif %}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
 {% if always_available_recipes %}
     The following recipes are always in season, but peak this month:
@@ -88,3 +65,5 @@ the same time:
 {% include "recipe-month.html" %}
 
 {% include "recipe-tags.html" %}
+
+{% endblock %}
