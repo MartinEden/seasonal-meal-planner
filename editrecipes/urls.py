@@ -9,6 +9,7 @@ urlpatterns = [
     path('recipes/<str:name>/', views.recipe, name='recipe'),
     path('month/<int:month_id>/', views.month),
     path('month', views.month),
+    path('year-chart', views.year_chart, name='year_chart'),
     path('category/<str:category>/', views.category, name='category'),
     path('category', views.category),
     path('sidedish/<str:sidedish>/<int:month_id>/', views.sidedish,

@@ -1,3 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mt-2">Yearly recipe chart</h1>
+    </div>
+</div>
+
 <table>
     <colgroup>
         <col>
@@ -40,3 +50,4 @@
     {% endfor %}
 
 </table>
+{% endblock %}

@@ -34,10 +34,13 @@ def recipe(request, name, month_id=None):
     return render(request, 'editrecipes/recipe.html', data)
 
 
-def grid(request):
-    return render(request, 'editrecipes/recipe-month.html',
-                  {'recipes': Recipe.objects.all(),
-                   'months': Month.objects.all()})
+def year_chart(request):
+    data = {
+        'recipes': Recipe.objects.all(),
+        'months': Month.objects.all(),
+        'this_month': get_month()
+    }
+    return render(request, 'editrecipes/year-chart.html', data)
 
 
 def month(request, month_id=None):
@@ -59,8 +62,6 @@ def month(request, month_id=None):
         'always_available_recipes': always_available_recipes,
         'clashing_season_recipes': clashing_season_recipes,
         'seasonal_recipes': seasonal_recipes.values(),
-        'months': Month.objects.all(),
-        'this_month': month,
         'tags': Tag.objects.all()
     }
 
