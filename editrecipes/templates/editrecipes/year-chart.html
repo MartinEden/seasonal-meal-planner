@@ -32,7 +32,8 @@
     {% for recipe in recipes %}
     <tr>
         <td>
-    <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></td>
+            <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+        </td>
         {% for month in months %}
             {% if month in recipe.months_in_peak_season %}
                 <td bgcolor="green"></td>

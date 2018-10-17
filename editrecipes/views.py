@@ -36,7 +36,9 @@ def recipe(request, name, month_id=None):
 
 def year_chart(request):
     data = {
-        'recipes': Recipe.objects.all(),
+        'recipes': Recipe.objects.all()
+                                 .prefetch_related('ingredients__peak')
+                                 .prefetch_related('ingredients__seasonal'),
         'months': Month.objects.all(),
         'this_month': get_month()
     }

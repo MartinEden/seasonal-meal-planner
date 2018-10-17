@@ -20,7 +20,10 @@ class MonthRecipes(object):
                     r.season_start(month_id))
 
         self.month = get_month(month_id)
-        self.all = sorted(Recipe.objects.all(), key=sort)
+        all_recipes = Recipe.objects.all() \
+                                    .select_related('category') \
+                                    .prefetch_related('ingredients')
+        self.all = sorted(all_recipes, key=sort)
 
     def a_months_recipes(self, month):
         return set(r for r in self.all
