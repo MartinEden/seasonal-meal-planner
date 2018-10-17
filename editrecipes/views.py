@@ -47,7 +47,7 @@ def year_chart(request):
 
 def tag_chart(request):
     data = {
-        'recipes': Recipe.objects.all(),
+        'recipes': Recipe.objects.all().prefetch_related('ingredients__tags'),
         'tags': Tag.objects.all()
     }
     return render(request, 'editrecipes/tag-chart.html', data)
