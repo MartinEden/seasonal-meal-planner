@@ -22,8 +22,22 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container-fluid">
-        {% block content %}{% endblock %}
+    <div class="row">
+        <div class="col-lg-1 col-md-2 col-12">
+            <ul class="nav flex-column h-100 bg-secondary">
+                <li class="nav-item bg-white">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item bg-white">
+                    <a class="nav-link" href="{% url 'year_chart' %}">Yearly chart</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-10 col-md-9 col-12">
+            <div class="container-fluid">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
     </div>
 </body>
 </html>
