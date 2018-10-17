@@ -31,9 +31,14 @@
             {% endfor %}
         </ul>
     </aside>
-    <div class="container-fluid" style="margin-left: 200px">
-        {{ current_url }}
+    <div class="container-fluid" style="margin-left: 200px; width: auto">
         {% block content %}{% endblock %}
+        <!--
+        {{ sql_queries|length }}
+        {% for query in sql_queries %}
+            <div class="p-3"><code>{{ query }}</code></div>
+        {% endfor %}
+        -->
     </div>
 </body>
 </html>

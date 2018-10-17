@@ -2,6 +2,11 @@
     height: 30px;
 }
 
+.table.table-compressed td {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
 .sidebar-nav {
     position: fixed;
     top: 0;

@@ -6,17 +6,18 @@
     </div>
 </div>
 
-<table>
+<table class="table table-striped table-compressed">
     <tr>
         <th>Recipe \ tag</th>
         {% for tag in tags %}
-            <td>{{tag.name}}</td>
+            <td class="p-2">{{tag.name|title}}</td>
         {% endfor %}
     </tr>
     {% for recipe in recipes %}
     <tr>
         <td>
-    <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></td>
+            <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+        </td>
         {% for tag in tags %}
             {% if tag in recipe.tags %}
                 {% if tag.name == "chili" %}
