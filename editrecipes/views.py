@@ -43,6 +43,14 @@ def year_chart(request):
     return render(request, 'editrecipes/year-chart.html', data)
 
 
+def tag_chart(request):
+    data = {
+        'recipes': Recipe.objects.all(),
+        'tags': Tag.objects.all()
+    }
+    return render(request, 'editrecipes/tag-chart.html', data)
+
+
 def month(request, month_id=None):
     month = get_month(month_id)
     recipes = sorted(Recipe.objects.all(), key=lambda x: (-x.in_season(
@@ -58,11 +66,9 @@ def month(request, month_id=None):
     always_available_recipes = month.this_months_always_available_peak_recipes()
     clashing_season_recipes = [r for r in recipes if r.clashing_seasonality()]
     context = {
-        'recipes': recipes,
         'always_available_recipes': always_available_recipes,
         'clashing_season_recipes': clashing_season_recipes,
-        'seasonal_recipes': seasonal_recipes.values(),
-        'tags': Tag.objects.all()
+        'seasonal_recipes': seasonal_recipes.values()
     }
 
     return render(request, 'editrecipes/index.html', context)
