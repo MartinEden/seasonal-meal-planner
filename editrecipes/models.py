@@ -11,30 +11,11 @@ def months_ago(now, then):
 class Month(models.Model):
     month = models.CharField(max_length=10)
 
-    def this_but_not_last(self):
-        return set(self.this_months_recipes()) - set(Month.a_months_recipes(
-            self.id - 1 if self.id > 1 else 12))
+    def previous(self):
+        return Month.objects.get(id=self.id - 1 % 12)
 
-    def this_but_not_next(self):
-        return set(self.this_months_recipes()) - set(Month.a_months_recipes(
-            self.id + 1 if self.id < 12 else 1))
-
-    @staticmethod
-    def a_months_recipes(month_id):
-        for r in Recipe.objects.all():
-            if not r.always_available() and Month.objects.get(id=month_id) in \
-                    r.months_in_season:
-                yield r
-
-    def this_months_recipes(self):
-        for r in Recipe.objects.all():
-            if not r.always_available() and self in r.months_in_season:
-                yield r
-
-    def this_months_always_available_peak_recipes(self):
-        for r in Recipe.objects.all():
-            if r.always_available() and self in r.months_in_peak_season:
-                yield r
+    def next(self):
+        return Month.objects.get(id=self.id + 1 % 12)
 
     def __str__(self):
         return self.month
@@ -62,7 +43,7 @@ class Ingredient(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
 
     def in_season(self, month_id):
-        return Month.objects.get(id=month_id) in self.seasonal.all()
+        return self.seasonal.filter(month__id=month_id)
 
     class Meta:
         ordering = ["name"]

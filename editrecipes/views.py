@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.shortcuts import get_object_or_404, render
 
-from editrecipes.helpers import get_month
+from editrecipes.helpers import get_month, MonthRecipes
 from editrecipes.viewmodels import RecipeWithSeasonality
 from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient
 
@@ -52,25 +52,15 @@ def tag_chart(request):
 
 
 def month(request, month_id=None):
-    month = get_month(month_id)
-    recipes = sorted(Recipe.objects.all(), key=lambda x: (-x.in_season(
-        month.id), x.length_time_in_season(), x.season_start(month_id)))
-
-    seasonal_recipes = dict((r.name, RecipeWithSeasonality(r)) for r in
-                            month.this_months_recipes())
-    for r in month.this_but_not_last():
-        seasonal_recipes[r.name].just_in = True
-    for r in month.this_but_not_next():
-        seasonal_recipes[r.name].last_chance = True
-
-    always_available_recipes = month.this_months_always_available_peak_recipes()
-    clashing_season_recipes = [r for r in recipes if r.clashing_seasonality()]
+    recipes = MonthRecipes(month_id)
+    always_available_recipes = recipes.evergreen_recipes_that_peak_this_month()
+    clashing_season_recipes = [r for r in recipes.all if
+                               r.clashing_seasonality()]
     context = {
         'always_available_recipes': always_available_recipes,
         'clashing_season_recipes': clashing_season_recipes,
-        'seasonal_recipes': seasonal_recipes.values()
+        'seasonal_recipes': recipes.seasonal_recipes()
     }
-
     return render(request, 'editrecipes/index.html', context)
 
 
