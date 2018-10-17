@@ -1,3 +1,52 @@
 .list-group-item {
     height: 30px;
 }
+
+.sidebar-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: white;
+    border-right: 1px solid black;
+    overflow-y: auto;
+}
+
+.sidebar-nav li {
+    text-indent: 10px;
+    line-height: 40px;
+    border-bottom: 1px rgb(230, 230, 230) solid;
+}
+
+.sidebar-nav li.active {
+    background-color: rgb(0, 123, 255); /* same as bg-primary */
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: white;
+    background: rgb(0, 99, 204);
+}
+
+.sidebar-nav li a:active, .sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav li.active a,
+.sidebar-nav li.active a:hover {
+    color: white;
+}
+
+.sidebar-nav li.active a:hover {
+    background-color: rgb(0, 99, 204);
+}

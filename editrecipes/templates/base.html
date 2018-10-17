@@ -22,40 +22,18 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="row">
-        <div class="col-lg-1 col-md-2 col-12">
-            <ul class="nav flex-column h-100 bg-secondary">
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
-                </li>
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'year_chart' %}">Yearly chart</a>
-                </li>
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'tag_chart' %}">Tag chart</a>
-                </li>
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'all_categories' %}">Dishes by category</a>
-                </li>
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'all_sidedishes' %}">Sidedishes</a>
-                </li>
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'select_recipes' %}">Select recipes</a>
-                </li>
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'search' %}">Search by ingredient</a>
-                </li>
-                <li class="nav-item bg-white">
-                    <a class="nav-link" href="{% url 'ingredients' %}">Ingredients</a>
-                </li>
-            </ul>
-        </div>
-        <div class="col-lg-10 col-md-9 col-12">
-            <div class="container-fluid">
-                {% block content %}{% endblock %}
-            </div>
-        </div>
+    <aside class="sidebar-nav">
+        <ul class="nav flex-column h-100">
+            {% for nav_item in nav %}
+            <li class="nav-item {% if current_url_name == nav_item.url_name %} active {% endif %}">
+                <a class="nav-link" href="{% url nav_item.url_name %}">{{ nav_item.text }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </aside>
+    <div class="container-fluid" style="margin-left: 200px">
+        {{ current_url }}
+        {% block content %}{% endblock %}
     </div>
 </body>
 </html>
