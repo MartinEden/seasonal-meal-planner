@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Recipes of type {{category.name}}</title>
-</head>
-<body>
- {% include 'category.html' %}
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+    {% include 'category.html' %}
+{% endblock %}

@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Shopping list</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Shopping list{% endblock %}
+
+{% block content %}
 <ul>
 {% for i in ingredients%}
     <li>{{i.name}}</li>
 {% endfor %}
 </ul>
-</body>
-</html>
+{% endblock %}

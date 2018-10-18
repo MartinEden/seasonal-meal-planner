@@ -43,7 +43,7 @@ class Ingredient(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
 
     def in_season(self, month_id):
-        return self.seasonal.filter(month__id=month_id)
+        return self.seasonal.filter(id=month_id)
 
     class Meta:
         ordering = ["name"]

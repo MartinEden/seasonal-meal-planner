@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Search</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<form method="get">
-    <input type="text" name="ingredient"/>
-    <button type="submit">Search</button>
-</form>
-{% if recipes %}
-    {% for ingredient, recipes in recipes.items %}
-        Recipes with {{ingredient}}:
-        <ul>
-        {% for recipe in recipes %}
-        <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></li>
+{% block title %}Search by ingredient{% endblock %}
+
+{% block content %}
+    <form method="get" class="form-inline">
+        <div class="form-group mr-3">
+            <input type="text" name="ingredient" class="form-control" />
+        </div>
+        <button class="btn btn-success" type="submit">Search</button>
+    </form>
+    {% if recipes %}
+        <div class="mt-3">
+        {% for ingredient, recipes in recipes.items %}
+            Recipes with {{ingredient}}:
+            <ul>
+                {% for recipe in recipes %}
+                <li><a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a></li>
+                {% endfor %}
+            </ul>
         {% endfor %}
-        </ul>
-    {% endfor %}
-{% endif %}
-</body>
-</html>
+        </div>
+    {% endif %}
+{% endblock %}

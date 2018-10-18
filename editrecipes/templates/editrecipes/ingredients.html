@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ingredients</title>
-</head>
-<body>
-{% include 'ingredients-month.html' %}
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Ingredients{% endblock %}
+
+{% block content %}
+{% include 'ingredients-month.html' %}
+{% endblock %}

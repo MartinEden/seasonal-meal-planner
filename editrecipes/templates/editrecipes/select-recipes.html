@@ -1,55 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Select recipes</title>
-</head>
-<body>
-<form method="GET" action="{% url 'shopping_list' %}">
-    <button type="submit">Create ingredients list</button>
-<table>
-    <colgroup>
-        <col>
-        {% for month in months %}
-        {% if month.month == this_month.month %}
-        <col class="this_month_col">
-        {% else %}
-        <col>
-        {% endif %}
-        {%endfor%}
-    </colgroup>
-    <tr>
-        <th>Recipe \ Month</th>
-        {% for month in months %}
-        {% if month.month == this_month.month %}
-            <td bgcolor="lightgrey"; width="5.5%">{{month.month}}</td>
-        {% else %}
-            <td width="5.5%">{{month.month}}</td>
-        {% endif %}
-        {% endfor %}
-    </tr>
-    {% for recipe in recipes %}
-    <tr>
-        <td>
-        <input type="checkbox" name="recipes" value="{{recipe.id}}"/>
-            <label for="{{recipe.id}}">{{ recipe.name }}</label>
-        {% for month in months %}
-            {% if month in recipe.months_in_peak_season %}
-                <td bgcolor="green"></td>
-            {% elif month in recipe.months_in_season %}
-                <td bgcolor="lightgreen"></td>
-            {% else %}
-                {% if month.month == this_month.month %}
-                    <td bgcolor="lightgrey"; width="5.5%"></td>
-                {% else %}
-                    <td bgcolor="white"></td>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>
-</form>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Make a shopping list{% endblock %}
+
+{% block content %}
+<form method="GET" action="{% url 'shopping_list' %}">
+    <button class="btn btn-success mt-3 mb-3" type="submit">Create ingredients list</button>
+    <table>
+        <colgroup>
+            <col>
+            {% for month in months %}
+            {% if month.month == this_month.month %}
+            <col class="this_month_col">
+            {% else %}
+            <col>
+            {% endif %}
+            {%endfor%}
+        </colgroup>
+        <tr>
+            <th>Recipe \ Month</th>
+            {% for month in months %}
+            {% if month.month == this_month.month %}
+                <td bgcolor="lightgrey"; width="5.5%">{{month.month}}</td>
+            {% else %}
+                <td width="5.5%">{{month.month}}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% for recipe in recipes %}
+        <tr>
+            <td>
+            <input type="checkbox" name="recipes" value="{{recipe.id}}"/>
+                <label for="{{recipe.id}}">{{ recipe.name }}</label>
+            {% for month in months %}
+                {% if month in recipe.months_in_peak_season %}
+                    <td bgcolor="green"></td>
+                {% elif month in recipe.months_in_season %}
+                    <td bgcolor="lightgreen"></td>
+                {% else %}
+                    {% if month.month == this_month.month %}
+                        <td bgcolor="lightgrey"; width="5.5%"></td>
+                    {% else %}
+                        <td bgcolor="white"></td>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</form>
+{% endblock %}

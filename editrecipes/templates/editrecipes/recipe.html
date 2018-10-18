@@ -1,6 +1,9 @@
-{% if recipe %}
-    <h1>{{ recipe.name }}</h1>
+{% extends 'base.html' %}
 
+{% block title %}{{ recipe.name }}{% endblock %}
+
+{% block content %}
+{% if recipe %}
     {% if valid_url %}
         <div>
             <a href="{{recipe.url}}">{{recipe.url}}</a>
@@ -57,3 +60,4 @@
 <br/>
     {% include "ingredients-month.html" with ingredients=dish.ingredients.all %}
 {% endfor %}
+{% endblock %}

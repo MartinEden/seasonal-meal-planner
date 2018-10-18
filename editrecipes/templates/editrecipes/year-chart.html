@@ -1,13 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<div class="row">
-    <div class="col-12">
-        <h1 class="mt-2">Yearly recipe chart</h1>
-    </div>
-</div>
+{% block title %}Year chart{% endblock %}
 
+{% block content %}
 <table class="table table-striped table-compressed">
     <colgroup>
         <col>
@@ -43,7 +39,7 @@
                 {% if month.month == this_month.month %}
                     <td bgcolor="lightgrey"; width="5.5%"></td>
                 {% else %}
-                    <td bgcolor="white"></td>
+                    <td></td>
                 {% endif %}
             {% endif %}
         {% endfor %}
