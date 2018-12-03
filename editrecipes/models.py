@@ -12,10 +12,10 @@ class Month(models.Model):
     month = models.CharField(max_length=10)
 
     def previous(self):
-        return Month.objects.get(id=self.id - 1 % 12)
+        return Month.objects.get(id=(self.id - 1) % 12)
 
     def next(self):
-        return Month.objects.get(id=self.id + 1 % 12)
+        return Month.objects.get(id=(self.id + 1) % 12)
 
     def __str__(self):
         return self.month
