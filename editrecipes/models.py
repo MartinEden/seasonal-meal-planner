@@ -51,6 +51,28 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
 
+class Unit(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class UnitConversion(models.Model):
+    from_unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING,
+                                  related_name='convert_from_unit')
+    to_unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING,
+                                related_name='convert_to_unit')
+    conversion_factor = models.DecimalField(max_digits = 6, decimal_places=2)
+
+class Quantity(models.Model):
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        if self.amount == int(self.amount):
+            return "%s %s" % (self.amount, self.unit)
+        else:
+            return "%s %s" % (int(self.amount), self.unit)
 
 class SideDish(models.Model):
     name = models.CharField(max_length=200)
