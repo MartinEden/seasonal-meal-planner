@@ -64,16 +64,6 @@ class UnitConversion(models.Model):
                                 related_name='convert_to_unit')
     conversion_factor = models.DecimalField(max_digits = 6, decimal_places=2)
 
-class Quantity(models.Model):
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
-    unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        if self.amount == int(self.amount):
-            return "%s %s" % (self.amount, self.unit)
-        else:
-            return "%s %s" % (int(self.amount), self.unit)
-
 class SideDish(models.Model):
     name = models.CharField(max_length=200)
     ingredients = models.ManyToManyField(Ingredient)
@@ -153,16 +143,20 @@ class Recipe(models.Model):
 class IngredientQuantity(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.DO_NOTHING)
-    quantity = models.ForeignKey(Quantity, on_delete=models.DO_NOTHING)
+    amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING)
 
     class Meta:
         verbose_name = "Quantity of ingredient"
 
     def __str__(self):
-        if self.quantity.unit != "item":
-            return "%s %s" % (self.quantity, self.ingredient)
+        if self.unit != "item":
+            if self.amount == int(self.amount):
+                return "%s %s %s" % (self.amount, self.unit, self.ingredient)
+            else:
+                return "%s %s %s" % (int(self.amount), self.unit, self.ingredient)
         else:
-            return "%s %s" % (int(self.quantity.amount), self.ingredient)
+            return "%s %s" % (int(self.amount), self.ingredient)
 
 # class RecipeIngredientQuantity(models.Model):
 #    recipe = models.ForeignKey(Recipe)
@@ -171,8 +165,14 @@ class IngredientQuantity(models.Model):
 #    class Meta:
 #        unique_together = (('recipe', 'ingredient'))
 
+class IngredientQuantityInline(admin.TabularInline):
+    model = IngredientQuantity
+    extra = 1
+
 class RecipesAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(
             "Ingredient", False)},
     }
+    inlines = (IngredientQuantityInline,)
+
