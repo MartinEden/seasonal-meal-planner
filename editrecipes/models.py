@@ -92,6 +92,9 @@ class Recipe(models.Model):
     name = models.CharField(max_length=200)
     url = models.CharField(max_length=200, blank=True)
     ingredients = models.ManyToManyField(Ingredient, related_name='recipes')
+    ingredient_quantities = models.ManyToManyField(Ingredient,
+                                                  through="IngredientQuantity",
+                                                  related_name='recipes_with_quantities')
     category = models.ForeignKey('DishType', on_delete=models.CASCADE,
                                  blank=True, null=True, related_name='recipes')
     sidedish = models.ManyToManyField(SideDish, blank=True)
@@ -147,6 +150,19 @@ class Recipe(models.Model):
     class Meta:
         ordering = ["name"]
 
+class IngredientQuantity(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.DO_NOTHING)
+    quantity = models.ForeignKey(Quantity, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        verbose_name = "Quantity of ingredient"
+
+    def __str__(self):
+        if self.quantity.unit != "item":
+            return "%s %s" % (self.quantity, self.ingredient)
+        else:
+            return "%s %s" % (int(self.quantity.amount), self.ingredient)
 
 # class RecipeIngredientQuantity(models.Model):
 #    recipe = models.ForeignKey(Recipe)
