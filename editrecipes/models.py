@@ -81,10 +81,9 @@ class SideDish(models.Model):
 class Recipe(models.Model):
     name = models.CharField(max_length=200)
     url = models.CharField(max_length=200, blank=True)
-    ingredients = models.ManyToManyField(Ingredient, related_name='recipes')
-    ingredient_quantities = models.ManyToManyField(Ingredient,
+    ingredients = models.ManyToManyField(Ingredient,
                                                   through="IngredientQuantity",
-                                                  related_name='recipes_with_quantities')
+                                                  related_name='recipes')
     category = models.ForeignKey('DishType', on_delete=models.CASCADE,
                                  blank=True, null=True, related_name='recipes')
     sidedish = models.ManyToManyField(SideDish, blank=True)
@@ -144,7 +143,9 @@ class IngredientQuantity(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-    unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING)
+    unit = models.ForeignKey(Unit,
+                             default=0,
+                                 on_delete=models.DO_NOTHING)
 
     class Meta:
         verbose_name = "Quantity of ingredient"
