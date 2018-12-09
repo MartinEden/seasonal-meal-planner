@@ -140,7 +140,8 @@ class Recipe(models.Model):
         ordering = ["name"]
 
 class IngredientQuantity(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING)
+    recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING,
+                               related_name='ingredient_quantities')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     unit = models.ForeignKey(Unit,
@@ -150,14 +151,17 @@ class IngredientQuantity(models.Model):
     class Meta:
         verbose_name = "Quantity of ingredient"
 
+    def rounded_amount(self):
+        if self.amount - int(self.amount) > 0:
+            return self.amount
+        return int(self.amount)
+
     def __str__(self):
-        if self.unit != "item":
-            if self.amount == int(self.amount):
-                return "%s %s %s" % (self.amount, self.unit, self.ingredient)
-            else:
-                return "%s %s %s" % (int(self.amount), self.unit, self.ingredient)
+        if self.unit.name != "item":
+            return "%s %s %s" % (self.rounded_amount(), self.unit,
+                                     self.ingredient)
         else:
-            return "%s %s" % (int(self.amount), self.ingredient)
+            return "%s %s" % (self.rounded_amount(), self.ingredient)
 
 # class RecipeIngredientQuantity(models.Model):
 #    recipe = models.ForeignKey(Recipe)
@@ -168,7 +172,7 @@ class IngredientQuantity(models.Model):
 
 class IngredientQuantityInline(admin.TabularInline):
     model = IngredientQuantity
-    extra = 1
+    extra = 0
 
 class RecipesAdmin(admin.ModelAdmin):
     formfield_overrides = {

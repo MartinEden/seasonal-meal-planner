@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render
 
 from editrecipes.helpers import get_month, MonthRecipes
 from editrecipes.viewmodels import RecipeWithSeasonality
-from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient
+from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient, IngredientQuantity
 
 
 def index(request):

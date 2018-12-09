@@ -14,8 +14,8 @@
 
     Ingredients:
     <ul>
-        {% for i in recipe.ingredients.all %}
-           <li>{{ i.name }}</li>
+        {% for i in recipe.ingredient_quantities.all %}
+           <li>{{i}}</li>
         {% endfor %}
             </ul>
     {% if dishes.any %}
