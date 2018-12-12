@@ -106,10 +106,13 @@ def select_recipes(request, month_id=None):
 def shopping_list(request):
     recipe_ids = request.GET.getlist('recipes')
     recipes = Recipe.objects.filter(pk__in=recipe_ids)
-    ingredients = []
+    ingredients = {}
     for recipe in recipes:
-        ingredients.extend(recipe.ingredients.all())
-    ingredients = set(ingredients)
+        for i in recipe.ingredient_quantities.all():
+            if not i.ingredient.name in ingredients.keys():
+                ingredients[i.ingredient.name] = []
+            ingredients[i.ingredient.name] += [i]
+
     context = {"ingredients": ingredients}
     return render(request, 'editrecipes/shopping-list.html', context)
 

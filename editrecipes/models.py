@@ -64,6 +64,9 @@ class UnitConversion(models.Model):
                                 related_name='convert_to_unit')
     conversion_factor = models.DecimalField(max_digits = 6, decimal_places=2)
 
+    def __str__(self):
+        return "1%s = %s%s" % (self.from_unit, self.conversion_factor, self.to_unit)
+
 class SideDish(models.Model):
     name = models.CharField(max_length=200)
     ingredients = models.ManyToManyField(Ingredient)
@@ -157,11 +160,13 @@ class IngredientQuantity(models.Model):
         return int(self.amount)
 
     def __str__(self):
+        return "%s %s" % (self.quantity(), self.ingredient)
+
+    def quantity(self):
         if self.unit.name != "item":
-            return "%s %s %s" % (self.rounded_amount(), self.unit,
-                                     self.ingredient)
+            return "%s%s" % (self.rounded_amount(), self.unit)
         else:
-            return "%s %s" % (self.rounded_amount(), self.ingredient)
+            return "%s" % (self.rounded_amount())
 
 # class RecipeIngredientQuantity(models.Model):
 #    recipe = models.ForeignKey(Recipe)
