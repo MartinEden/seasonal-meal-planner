@@ -7,10 +7,23 @@ from editrecipes.viewmodels import RecipeWithSeasonality
 from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient, IngredientQuantity
 
 
+def login(request):
+    if request.method == 'POST':
+        form = loginForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            auth_login(request, user)
+            return
+    else:
+        form = loginForm()
+    return render(request, 'login.html', {'form': form})
+
+@login_required
 def index(request):
     return month(request)
 
 
+@login_required
 def recipe(request, name, month_id=None):
     recipe = get_object_or_404(Recipe, name__exact=name)
     this_month = get_month(month_id)
@@ -34,6 +47,7 @@ def recipe(request, name, month_id=None):
     return render(request, 'editrecipes/recipe.html', data)
 
 
+@login_required
 def year_chart(request):
     data = {
         'recipes': Recipe.objects.all()
@@ -45,6 +59,7 @@ def year_chart(request):
     return render(request, 'editrecipes/year-chart.html', data)
 
 
+@login_required
 def tag_chart(request):
     data = {
         'recipes': Recipe.objects.all().prefetch_related('ingredients__tags'),
@@ -53,6 +68,7 @@ def tag_chart(request):
     return render(request, 'editrecipes/tag-chart.html', data)
 
 
+@login_required
 def month(request, month_id=None):
     recipes = MonthRecipes(month_id)
     always_available_recipes = recipes.evergreen_recipes_that_peak_this_month()
@@ -66,6 +82,7 @@ def month(request, month_id=None):
     return render(request, 'editrecipes/index.html', context)
 
 
+@login_required
 def category(request, category=None):
     if category is None:
         return render(request, 'editrecipes/categories.html',
@@ -76,6 +93,7 @@ def category(request, category=None):
                       {'category': dishtype})
 
 
+@login_required
 def sidedish(request, sidedish=None, month_id=None):
     if sidedish is None:
         return render(request, 'editrecipes/sidedishes.html',
@@ -90,6 +108,7 @@ def sidedish(request, sidedish=None, month_id=None):
                        'this_month': month})
 
 
+@login_required
 def select_recipes(request, month_id=None):
     month = get_month(month_id)
     recipes = sorted(Recipe.objects.all(), key=lambda x: (-x.in_season(
@@ -117,6 +136,7 @@ def shopping_list(request):
     return render(request, 'editrecipes/shopping-list.html', context)
 
 
+@login_required
 def search(request):
     if 'ingredient' in request.GET:
         search = request.GET['ingredient']
@@ -134,6 +154,7 @@ def search(request):
         return render(request, 'editrecipes/search.html', {})
 
 
+@login_required
 def ingredients(request, month_id=None):
     month = get_month(month_id)
     return render(request, 'editrecipes/ingredients.html',
