@@ -22,5 +22,8 @@ urlpatterns = [
     path('shopping-list', views.shopping_list, name='shopping_list'),
     path('search', views.search, name='search'),
     path('search/<str:ingredient>/', views.search, name='search'),
-    path('ingredients', views.ingredients, name='ingredients')
+    path('ingredients', views.ingredients, name='ingredients'),
+    path('sort-into-aisles', views.sort_into_aisles, name='sort_into_aisles'),
+    path('sort-into-aisles/<str:aisle>', views.sort_into_aisles,
+         name='sort_into_aisles')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

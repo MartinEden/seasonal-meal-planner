@@ -1,11 +1,12 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
 
 from editrecipes.helpers import get_month, MonthRecipes
 from editrecipes.viewmodels import RecipeWithSeasonality
-from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient, IngredientQuantity
-
+from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient, \
+    IngredientQuantity, Aisle
 
 def login(request):
     if request.method == 'POST':
@@ -111,29 +112,61 @@ def sidedish(request, sidedish=None, month_id=None):
 @login_required
 def select_recipes(request, month_id=None):
     month = get_month(month_id)
+    filter_tags = request.GET.getlist('tags')
     recipes = sorted(Recipe.objects.all(), key=lambda x: (-x.in_season(
         month.id), x.length_time_in_season(), x.season_start(month_id)))
+    tags = {}
+    for tag in Tag.objects.all():
+        tags[tag] = tag.name in filter_tags
+    print(tags)
     context = {
         'recipes': recipes,
         'months': Month.objects.all(),
         'this_month': month,
-        'tags': Tag.objects.all()
+        'tags': tags
     }
     return render(request, 'editrecipes/select-recipes.html', context)
 
 
+@login_required
 def shopping_list(request):
     recipe_ids = request.GET.getlist('recipes')
     recipes = Recipe.objects.filter(pk__in=recipe_ids)
     ingredients = {}
     for recipe in recipes:
         for i in recipe.ingredient_quantities.all():
-            if not i.ingredient.name in ingredients.keys():
-                ingredients[i.ingredient.name] = []
-            ingredients[i.ingredient.name] += [i]
+            if not i.ingredient in ingredients.keys():
+                ingredients[i.ingredient] = []
+            ingredients[i.ingredient] += [i]
 
-    context = {"ingredients": ingredients}
+    if any(i for i in ingredients if i.aisle is None):
+        return redirect("sort_into_aisles")
+
+    items = sorted(ingredients.items(), key=lambda x: x[0].aisle.number)
+
+    context = {"ingredients": items}
+    print(context["ingredients"])
     return render(request, 'editrecipes/shopping-list.html', context)
+
+@login_required
+def sort_into_aisles(request, aisle=None):
+    if request.method == "POST":
+        for key, value in request.POST.items():
+            if key.isdigit() and value.isdigit():
+                i = Ingredient.objects.get(id=key)
+                i.aisle = Aisle.objects.get(number=value)
+                i.save()
+    if aisle=="all":
+        ingredients = Ingredient.objects.all()
+    elif aisle is not None:
+        ingredients = Ingredient.objects.filter(aisle__name=aisle)
+    else:
+        ingredients = Ingredient.objects.filter(aisle=None)
+    context = {"ingredients": ingredients,
+    "aisles":
+        Aisle.objects.all(),
+               "aisle":aisle}
+    return render(request, 'editrecipes/sort-into-aisles.html', context)
 
 
 @login_required

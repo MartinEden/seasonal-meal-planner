@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Month, Recipe, RecipesAdmin, Ingredient, Tag, DishType, \
-    SideDish, Unit, UnitConversion, IngredientQuantity
+    SideDish, Unit, UnitConversion, IngredientQuantity, Aisle
 
 admin.site.register(Month)
 admin.site.register(Recipe, RecipesAdmin)
@@ -11,3 +11,4 @@ admin.site.register(SideDish)
 admin.site.register(Unit)
 admin.site.register(UnitConversion)
 admin.site.register(IngredientQuantity)
+admin.site.register(Aisle)

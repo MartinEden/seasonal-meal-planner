@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Sort ingredients into aisles{% endblock %}
+{% block content %}
+<form method="POST" action="{% url 'sort_into_aisles' aisle=aisle %}">
+    {% csrf_token %}
+    <table>
+        <colgroup>
+            <col>
+            {% for aisle in aisles %}
+            <col>
+            {%endfor%}
+        </colgroup>
+        <tr>
+            <th>Ingredient \ Aisle</th>
+            {% for aisle in aisles %}
+            <th>{{ aisle.name }}</th>
+            {% endfor %}
+        </tr>
+        {% for ingredient in ingredients %}
+        <tr>
+            <td>{{ ingredient.name }}
+            {% for aisle in aisles %}
+                {% if ingredient.aisle.number == aisle.number %}
+                    <td><input onchange='this.form.submit();' type="radio" name="{{ingredient.id}}" value="{{aisle.number}}" checked></td>
+                {% else %}
+                    <td><input onchange='this.form.submit();' type="radio" name="{{ingredient.id}}" value="{{aisle.number}}"></td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</form>
+{% endblock %}

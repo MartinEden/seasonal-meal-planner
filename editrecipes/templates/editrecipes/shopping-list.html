@@ -4,8 +4,11 @@
 
 {% block content %}
 <ul>
-{% for i, iq in ingredients.items%}
+{% for i, iq in ingredients%}
     <li>{% for j in iq %}{{j.quantity}}{% if not forloop.last %} + {% endif %}{%endfor%} {{i}}</li>
 {% endfor %}
+    {% for i in items %}
+    <li>{{i}}</li>
+    {% endfor %}
 </ul>
 {% endblock %}

@@ -19,9 +19,9 @@
         <th>Recipe \ Month</th>
         {% for month in months %}
         {% if month.month == this_month.month %}
-            <td bgcolor="lightgrey"; width="5.5%">{{month.month}}</td>
+            <td bgcolor="lightgrey"; width="5.5%">{{month.shortname}}</td>
         {% else %}
-            <td width="5.5%">{{month.month}}</td>
+            <td width="5.5%">{{month.shortname}}</td>
         {% endif %}
         {% endfor %}
     </tr>

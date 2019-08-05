@@ -10,12 +10,16 @@ def months_ago(now, then):
 
 class Month(models.Model):
     month = models.CharField(max_length=10)
-
     def previous(self):
-        return Month.objects.get(id=(self.id - 1) % 12)
+        id = (self.id - 1) % 12
+        id = id if id != 0 else 12
+        return Month.objects.get(id=id)
 
     def next(self):
         return Month.objects.get(id=(self.id + 1) % 12)
+
+    def shortname(self):
+        return self.month[0:3]
 
     def __str__(self):
         return self.month
@@ -34,6 +38,15 @@ class DishType(models.Model):
     def __str__(self):
         return self.name
 
+class Aisle(models.Model):
+    number = models.IntegerField()
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "%s - %s" % (self.number, self.name)
+
+    class Meta:
+        ordering = ['number']
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=200)
@@ -41,6 +54,7 @@ class Ingredient(models.Model):
     peak = models.ManyToManyField(Month, related_name="peak_month",
                                   blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
+    aisle = models.ForeignKey(Aisle, on_delete=models.DO_NOTHING, null=True)
 
     def in_season(self, month_id):
         return self.seasonal.filter(id=month_id)
@@ -167,6 +181,10 @@ class IngredientQuantity(models.Model):
             return "%s%s" % (self.rounded_amount(), self.unit)
         else:
             return "%s" % (self.rounded_amount())
+
+class Recent(models.Model):
+    meal = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    date = models.DateField()
 
 # class RecipeIngredientQuantity(models.Model):
 #    recipe = models.ForeignKey(Recipe)

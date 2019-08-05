@@ -1,8 +1,38 @@
 {% extends 'base.html' %}
-
+{% block script%}
+    <script>
+        $(function() {
+            $("#filter").submit(function(e){
+                $('tr').css('opacity','').css('font-size','');
+                e.preventDefault();
+                var tags = $(e.target).find(":checked");
+                tags = $.map(tags, function(t) {
+                    return $(t).val();
+                });
+                for (let tag of tags){
+                    $("tr."+tag).css('opacity','0.3').css('font-size','75%');
+                }
+            });
+            $("#clear-checkboxes").click(function(e){
+                $("#filter").find('input:checkbox').prop('checked', false);
+            });
+        });
+    </script>
+{% endblock %}
 {% block title %}Make a shopping list{% endblock %}
 
 {% block content %}
+<form id="filter">
+    {% for tag_key,tag_value in tags.items %}
+        <div style="display: inline-block; float: left; margin: 0 15px">
+            <input type="checkbox" name="tags" value="{{tag_key}}" id="tag-{{tag_key}}" {%if tag_value %}checked{%endif%}/>
+            <label for="tag-{{tag_key}}">{{ tag_key }}</label>
+        </div>
+    {% endfor%}
+    <div style="clear: left;"></div>
+    <button class="btn btn-success mt-3 mb-3" type="submit">Remove</button>
+    <button class="btn btn-success mt-3 mb-3" type="button" id="clear-checkboxes">Clear</button>
+</form>
 <form method="GET" action="{% url 'shopping_list' %}">
     <button class="btn btn-success mt-3 mb-3" type="submit">Create ingredients list</button>
     <table>
@@ -20,16 +50,16 @@
             <th>Recipe \ Month</th>
             {% for month in months %}
             {% if month.month == this_month.month %}
-                <td bgcolor="lightgrey"; width="5.5%">{{month.month}}</td>
+                <td bgcolor="lightgrey"; width="5.5%">{{month.shortname}}</td>
             {% else %}
-                <td width="5.5%">{{month.month}}</td>
+                <td width="5.5%">{{month.shortname}}</td>
             {% endif %}
             {% endfor %}
         </tr>
         {% for recipe in recipes %}
-        <tr>
+        <tr class="{% for tag in recipe.tags %}{{tag}} {%endfor%}">
             <td>
-            <input type="checkbox" name="recipes" value="{{recipe.id}}"/>
+            <input type="checkbox" name="recipes" value="{{recipe.id}}" id="{{recipe.id}}"/>
                 <label for="{{recipe.id}}">{{ recipe.name }}</label>
             {% for month in months %}
                 {% if month in recipe.months_in_peak_season %}
