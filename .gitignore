@@ -1,6 +1,7 @@
-.idea/*
 **/__pycache__/*
-db.sqlite3
-venv/*
+.idea/*
 datadump.json
 DB backups/*
+db.sqlite3
+todo.txt
+venv/*
