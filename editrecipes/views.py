@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from editrecipes.helpers import get_month, MonthRecipes
 from editrecipes.viewmodels import RecipeWithSeasonality
 from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient, \
-    IngredientQuantity, Aisle
+    IngredientQuantity, Aisle, Guest
 
 def login(request):
     if request.method == 'POST':
@@ -118,12 +118,13 @@ def select_recipes(request, month_id=None):
     tags = {}
     for tag in Tag.objects.all():
         tags[tag] = tag.name in filter_tags
-    print(tags)
+    guests = Guest.objects.all()
     context = {
         'recipes': recipes,
         'months': Month.objects.all(),
         'this_month': month,
-        'tags': tags
+        'tags': tags,
+        'guests':guests,
     }
     return render(request, 'editrecipes/select-recipes.html', context)
 

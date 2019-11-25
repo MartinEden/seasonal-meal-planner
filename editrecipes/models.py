@@ -188,6 +188,17 @@ class Recent(models.Model):
     meal = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     date = models.DateField()
 
+
+class Guest(models.Model):
+    name = models.CharField(max_length=100)
+    problem_tags = models.ManyToManyField(Tag, blank=True,
+                                          related_name="guest_for_whom_problematic")
+    problem_ingredients = models.ManyToManyField(Ingredient, blank=True,
+                                                 related_name="guest_for_whom_problematic")
+
+    def __str__(self):
+        return self.name
+
 # class RecipeIngredientQuantity(models.Model):
 #    recipe = models.ForeignKey(Recipe)
 #    ingredient = models.ForeignKey(Ingredient)
@@ -205,4 +216,3 @@ class RecipesAdmin(admin.ModelAdmin):
             "Ingredient", False)},
     }
     inlines = (IngredientQuantityInline,)
-
