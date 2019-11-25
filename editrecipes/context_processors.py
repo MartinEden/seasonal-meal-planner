@@ -13,6 +13,7 @@ static_nav = [
     NavItem('Tag chart', 'tag_chart'),
     NavItem('Dishes by category', 'all_categories'),
     NavItem('Sidedishes', 'all_sidedishes'),
+    NavItem('Plan week', 'plan_week'),
     NavItem('Make a shopping list', 'select_recipes'),
     NavItem('Search by ingredient', 'search'),
     NavItem('Ingredients', 'ingredients')

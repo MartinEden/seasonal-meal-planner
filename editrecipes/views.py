@@ -149,6 +149,12 @@ def shopping_list(request):
     print(context["ingredients"])
     return render(request, 'editrecipes/shopping-list.html', context)
 
+
+@login_required
+def plan_week(request):
+    return render(request, 'editrecipes/plan-week.html')
+
+
 @login_required
 def sort_into_aisles(request, aisle=None):
     if request.method == "POST":

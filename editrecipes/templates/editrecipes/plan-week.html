@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block script %}
+  <script>
+  $( function() {
+    var dateFormat = "DD, d MM, YY",
+      from = $( "#from" )
+        .datepicker({
+          defaultDate: "+1d",
+          showButtonPanel: true,
+          minDate: 0,
+          maxDate: "+1W",
+          hideIfNoPrevNext: true
+        })
+        .on( "change", function() {
+          to.datepicker( "option", "minDate", getDate( this ) );
+        }),
+      to = $( "#to" ).datepicker({
+        defaultDate: "+1w",
+        showButtonPanel: true,
+        maxDate: "+2W",
+        minDate: 0,
+        hideIfNoPrevNext: true,
+      })
+      .on( "change", function() {
+        from.datepicker( "option", "maxDate", getDate( this ) );
+      });
+
+    function getDate( element ) {
+      var date;
+      try {
+        date = $.datepicker.parseDate( dateFormat, element.value );
+      } catch( error ) {
+        date = null;
+      }
+
+      return date;
+    }
+  } );
+  </script>
+{% endblock %}
+
+{% block title %}Plan week{% endblock %}
+
+{% block content %}
+
+<label for="from">From</label>
+<input type="text" id="from" name="from">
+<label for="to">to</label>
+<input type="text" id="to" name="to">
+<br/><br/><br/><br/><br/><br/><br/><br/>
+<div>
+[List of days]
+[Add guest UI - single UI for whole week, click on day first to assign]
+[Additional per-meal requirements e.g. cooking time; to be added later, currently no info in meal planner]
+</div>
+<div>
+Constraints:
+Tag - max/min - quantity
+(default: max 1 meat, min 1 fish)
+</div>
+<button></button>
+[Button - select randomly correct quantity of meals that meet requirements]
+<div>
+[Display results]
+</div>
+{% endblock %}
