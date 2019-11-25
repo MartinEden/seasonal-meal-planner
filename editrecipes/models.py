@@ -16,7 +16,9 @@ class Month(models.Model):
         return Month.objects.get(id=id)
 
     def next(self):
-        return Month.objects.get(id=(self.id + 1) % 12)
+        id = (self.id + 1) % 12
+        id = id if id != 0 else 12
+        return Month.objects.get(id=id)
 
     def shortname(self):
         return self.month[0:3]
