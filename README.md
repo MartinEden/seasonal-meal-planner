@@ -1,4 +1,9 @@
 # Seasonal meal planner
+To setup on a new machine:
+```bash
+pip3 install -r requirements.txt
+```
+
 To run:
 
 ```bash
