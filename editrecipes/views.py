@@ -2,11 +2,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+import json
 
 from editrecipes.helpers import get_month, MonthRecipes
 from editrecipes.viewmodels import RecipeWithSeasonality
 from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient, \
     IngredientQuantity, Aisle, Guest
+
 
 def login(request):
     if request.method == 'POST':
@@ -18,6 +20,7 @@ def login(request):
     else:
         form = loginForm()
     return render(request, 'login.html', {'form': form})
+
 
 @login_required
 def index(request):
@@ -152,7 +155,9 @@ def shopping_list(request):
 
 @login_required
 def plan_week(request):
-    return render(request, 'editrecipes/plan-week.html')
+    ingredients = [i.name for i in Ingredient.objects.all()]
+    tags = [t.name for t in Tag.objects.all()]
+    return render(request, 'editrecipes/plan-week.html', {"tags": tags, "ingredients": ingredients})
 
 
 @login_required
@@ -178,6 +183,7 @@ def sort_into_aisles(request, aisle=None):
 
 @login_required
 def search(request):
+    all_ingredients = [i.name for i in Ingredient.objects.all()]
     if 'ingredient' in request.GET:
         search = request.GET['ingredient']
         ingredients = [i for i in Ingredient.objects.all() if search in i.name]
@@ -189,9 +195,10 @@ def search(request):
         return render(request, 'editrecipes/search.html',
                       {'recipes': recipes,
                        'ingredient': search,
-                       'ingredients': ingredients})
+                       'ingredients': ingredients,
+                       'all_ingredients': all_ingredients})
     else:
-        return render(request, 'editrecipes/search.html', {})
+        return render(request, 'editrecipes/search.html', {"all_ingredients": all_ingredients})
 
 
 @login_required

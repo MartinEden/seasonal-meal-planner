@@ -50,6 +50,7 @@ class Aisle(models.Model):
     class Meta:
         ordering = ['number']
 
+
 class Ingredient(models.Model):
     name = models.CharField(max_length=200)
     seasonal = models.ManyToManyField(Month, related_name="seasonal_month")
@@ -67,11 +68,13 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
 
+
 class Unit(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
+
 
 class UnitConversion(models.Model):
     from_unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING,
@@ -82,6 +85,7 @@ class UnitConversion(models.Model):
 
     def __str__(self):
         return "1%s = %s%s" % (self.from_unit, self.conversion_factor, self.to_unit)
+
 
 class SideDish(models.Model):
     name = models.CharField(max_length=200)
@@ -158,6 +162,7 @@ class Recipe(models.Model):
     class Meta:
         ordering = ["name"]
 
+
 class IngredientQuantity(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING,
                                related_name='ingredient_quantities')
@@ -184,6 +189,7 @@ class IngredientQuantity(models.Model):
         else:
             return "%s" % (self.rounded_amount())
 
+
 class Recent(models.Model):
     meal = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     date = models.DateField()
@@ -206,9 +212,11 @@ class Guest(models.Model):
 #    class Meta:
 #        unique_together = (('recipe', 'ingredient'))
 
+
 class IngredientQuantityInline(admin.TabularInline):
     model = IngredientQuantity
     extra = 0
+
 
 class RecipesAdmin(admin.ModelAdmin):
     formfield_overrides = {

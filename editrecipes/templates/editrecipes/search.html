@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
-
+{% block script %}
+  <script>
+  $( function() {
+    var all_ingredients = {{ all_ingredients|safe }};
+    $( "#autocomplete-ingredient" ).autocomplete({
+       source: all_ingredients
+    });
+  } );
+  </script>
+{% endblock %}
 {% block title %}Search by ingredient{% endblock %}
 
 {% block content %}
     <form method="get" class="form-inline">
         <div class="form-group mr-3">
-            <input type="text" name="ingredient" class="form-control" />
+            <label for = "autocomplete-ingredient">Ingredient name: </label>
+            <input id = "autocomplete-ingredient" type="text" name="ingredient" class="form-control" />
         </div>
         <button class="btn btn-success" type="submit">Search</button>
     </form>
