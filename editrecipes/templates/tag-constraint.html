@@ -1,4 +1,4 @@
-  <label for = "autocomplete-tag">At most one: </label>
+<label for = "autocomplete-tag">At most one: </label>
   <input id = "autocomplete-tag">
 <!--  <input type="number">
   <select>
@@ -6,3 +6,13 @@
     <option value="min">Min</option>
 </select>
 <br/>-->
+
+<!--<script>
+    $(function() {
+      var tags = {{ tags|safe }};
+      $("#autocomplete-tag").autocomplete({ source: tags });
+      var ingredients = {{ ingredients|safe }};
+      $( "#autocomplete-ingredient" ).autocomplete({
+         source: ingredients
+      });
+</script>-->

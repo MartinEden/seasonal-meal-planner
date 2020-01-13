@@ -55,8 +55,8 @@ def recipe(request, name, month_id=None):
 def year_chart(request):
     data = {
         'recipes': Recipe.objects.all()
-                                 .prefetch_related('ingredients__peak')
-                                 .prefetch_related('ingredients__seasonal'),
+            .prefetch_related('ingredients__peak')
+            .prefetch_related('ingredients__seasonal'),
         'months': Month.objects.all(),
         'this_month': get_month()
     }
@@ -127,7 +127,7 @@ def select_recipes(request, month_id=None):
         'months': Month.objects.all(),
         'this_month': month,
         'tags': tags,
-        'guests':guests,
+        'guests': guests,
     }
     return render(request, 'editrecipes/select-recipes.html', context)
 
@@ -157,7 +157,8 @@ def shopping_list(request):
 def plan_week(request):
     ingredients = [i.name for i in Ingredient.objects.all()]
     tags = [t.name for t in Tag.objects.all()]
-    return render(request, 'editrecipes/plan-week.html', {"tags": tags, "ingredients": ingredients})
+    guests = [{"id": g.id, "name": g.name} for g in Guest.objects.all()]
+    return render(request, 'editrecipes/plan-week.html', {"tags": tags, "ingredients": ingredients, "guests": guests})
 
 
 @login_required
@@ -168,16 +169,16 @@ def sort_into_aisles(request, aisle=None):
                 i = Ingredient.objects.get(id=key)
                 i.aisle = Aisle.objects.get(number=value)
                 i.save()
-    if aisle=="all":
+    if aisle == "all":
         ingredients = Ingredient.objects.all()
     elif aisle is not None:
         ingredients = Ingredient.objects.filter(aisle__name=aisle)
     else:
         ingredients = Ingredient.objects.filter(aisle=None)
     context = {"ingredients": ingredients,
-    "aisles":
-        Aisle.objects.all(),
-               "aisle":aisle}
+               "aisles":
+                   Aisle.objects.all(),
+               "aisle": aisle}
     return render(request, 'editrecipes/sort-into-aisles.html', context)
 
 
