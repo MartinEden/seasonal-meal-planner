@@ -46,10 +46,8 @@ function WeekPlan() {
 //    }
 
     this.people = ko.observableArray([]);
-    var guests = console.debug(document.getElementById('guests-data').textContent);
-    console.debug(guests);
+    var guests = JSON.parse(document.getElementById('guests-data').textContent);
     for (g in guests) {
-        this.people.push(new Guest(g));
+        this.people.push(new Guest(guests[g]));
     }
-    console.debug(guests);
 }
