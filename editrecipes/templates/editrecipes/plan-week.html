@@ -5,8 +5,9 @@
 <script type="text/javascript" src="{% static 'editrecipes/scripts/datepicker.js' %}"></script>
 <script type="text/javascript" src="{% static 'editrecipes/scripts/planweek.js' %}"></script>
 <script type="text/javascript" src="{% static 'editrecipes/scripts/knockoutjs-drag-n-drop.js' %}"></script>
-<script type="text/javascript" src="{% static 'editrecipes/scripts/knockoutjs-autocomplete.js' %}"></script>
+<!--<script type="text/javascript" src="{% static 'editrecipes/scripts/knockoutjs-autocomplete.js' %}"></script>-->
 {{ guests|json_script:"guests-data" }}
+{{ tags|json_script:"tags-data" }}
 <script type="text/javascript">
   $(function() {
     setupDatePickers();
@@ -21,10 +22,14 @@
 
 <div class="row">
     <div class="col-12">
-        <label for="from">From</label>
-        <input type="text" id="from" name="from" data-bind="value: fromDate.text">
-        <label for="to">to</label>
-        <input type="text" id="to" name="to" data-bind="value: toDate.text">
+        <div data-bind="using: fromDate">
+            <label for="from">From</label>
+            <input type="text" id="from" name="from" data-bind="value: text">
+        </div>
+        <div data-bind="using: toDate">
+            <label for="to">to</label>
+            <input type="text" id="to" name="to" data-bind="value: text">
+        </div>
     </div>
 </div>
 
@@ -65,13 +70,31 @@
 
     <div class="col-12 mt-3">
         <h2>Constraints</h2>
-        <ul data-bind="foreach: tags" class="list-inline" id="max_once">
-            <li class="list-inline-item">At most one:<span data-bind="text: label"></span></li>
-        </ul>
-        {% include "tag-constraint.html" %}
+        <div class="col-12 mt-3">
+            Maximum one per week of...
+            <!--<ul data-bind="foreach: chosenMaxTags" class="list-inline">
+                <li class="list-inline-item" data-bind="text: name"></li>
+            </ul>-->
+        </div>
+        <select data-bind="options: maxTags, selectedOptions: chosenMaxTags, optionsText: 'name'" multiple="true"></select>
+        <div class="col-12 mt-3">
+            Minimum one per week of...
+<!--            <ul data-bind="foreach: chosenMinTags" class="list-inline">-->
+<!--                <li class="list-inline-item" data-bind="text: name"></li>-->
+<!--            </ul>-->
+        </div>
+        <select data-bind="options: minTags, selectedOptions: chosenMinTags, optionsText: 'name'" multiple="true"></select>
 
+<!--        <div class="col-12 mt-3">-->
+<!--            <ul data-bind="foreach: chosenTags" class="list-inline">-->
+<!--                <li class="list-inline-item" data-bind="text: name"></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+        <!--        <ul data-bind="foreach: tags" class="list-inline" id="max_once">-->
+<!--            <li class="list-inline-item">At most one:<span data-bind="text: label"></span></li>-->
 
-        <!--  <label for = "autocomplete-ingredient">Use up ingredients: </label>
+        <!--include "tag-constraint.html" -->
+<!--         <label for = "autocomplete-ingredient">Use up ingredients: </label>
           <input id = "autocomplete-ingredient">
           <label for = "autocomplete-ingredient-2">Consider ingredients: </label>
           <input id = "autocomplete-ingredient-2">

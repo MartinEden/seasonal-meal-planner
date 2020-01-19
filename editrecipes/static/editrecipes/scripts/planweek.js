@@ -3,25 +3,6 @@ function Diner(data) {
     this.id = ko.observable(data.id);
 }
 
-/*var getDiner = function(name, id) {
-    return {
-        diner: new Diner({"name": name, "id": id}),
-    };
-};
-
-
-   this.selectedPeopleIndices = ko.observable([])
-   this.selectedPeople = ko.computed(function(){
-     var peeps = []
-     for (index in this.selectedPeopleIndicies)
-     {
-        peeps.push(that.people[index]);
-        return peeps;
-     }
-   });
-
-
-   */
 function Day(name) {
     var that = this;
     this.name = ko.observable(name);
@@ -50,46 +31,44 @@ function Day(name) {
 }
 
 function DateModel(offsetFromToday) {
-    var that = this;
     var date = new Date();
     date.setDate(new Date().getDate() + offsetFromToday);
     this.value = ko.observable(date);
 
-    this.text = ko.pureComputed({
+    this.text = ko.computed({
         read: function() {
-            return formatDate(that.value());
+            return formatDate(this.value());
         },
         write: function(value) {
             var withYear = Date.parse(value + ", " + new Date().getFullYear());
-            that.value(withYear);
-        }
+            this.value(new Date(withYear));
+        },
+        owner: this
     });
 }
 
-function TagConstraint(data) {
-    this.name = ko.observable(data.name)
-    this.max = ko.observable(1)
-    this.min = ko.observable(0)
+function TagConstraint(name, max, min) {
+    this.name = ko.observable(name)
+    this.max = ko.observable(max)
+    this.min = ko.observable(min)
 }
 
 function WeekPlan() {
-    var that = this;
     this.fromDate = ko.observable(new DateModel(+1));
     this.toDate = ko.observable(new DateModel(+7));
 
-    this.days = ko.computed(function() {
-        var days = [];
-        var date = that.fromDate().value();
-        while (date < that.toDate().value()) {
-            days.push(new Day(formatDate(date)));
-            date.setDate(date.getDate() + 1);
-        }
-        return days;
+    this.days = ko.computed({
+        read: function() {
+            var days = [];
+            var date = this.fromDate().value();
+            while (date < this.toDate().value()) {
+                days.push(new Day(formatDate(date)));
+                date.setDate(date.getDate() + 1);
+            }
+            return days;
+        },
+        owner: this
     });
-
-    //    this.invite = function(dayIndex, personIndex) {
-    //        this.days[dayIndex].guests.push(self.people[personIndex])
-    //    }
 
     this.people = ko.observableArray([]);
     var allPeople = JSON.parse(document.getElementById('guests-data').textContent);
@@ -97,18 +76,36 @@ function WeekPlan() {
         this.people.push(new Diner(allPeople[p]));
     }
 
-    this.tags = ko.observableArray();
-    this.selectedOption = ko.observable();
-    addConstraint = function(item) {
-        var match = ko.utils.arrayFirst(that.tags,
-            function(item) {
-                return that.selectedOption.value === item.value;
-            });
-        //if (match. is not defined )){
-        that.tags.push(that.selectedOption)
-        //}
-        console.debug(that.selectedOption)
-    };
+    var allTags = JSON.parse(document.getElementById('tags-data').textContent);
+    this.maxTags = ko.observableArray();
+    for (t in allTags) {
+        this.maxTags.push(new TagConstraint(allTags[t],1,0));
+    }
+    this.chosenMaxTags = ko.observableArray();
+    this.minTags = ko.observableArray();
+    for (t in allTags) {
+        this.minTags.push(new TagConstraint(allTags[t],0,1));
+    }
+    this.chosenMinTags = ko.observableArray();
+
+    this.chosenTags = ko.computed({
+        read: function () {
+            return this.chosenMaxTags().concat(this.chosenMinTags());
+        },
+        owner: this
+    });
+
+
+//    addConstraint = function(item) {
+//        var match = ko.utils.arrayFirst(that.tags,
+//            function(item) {
+//                return that.selectedOption.value === item.value;
+//            });
+//        //if (match. is not defined )){
+//        this????.tags.push(that.selectedOption)
+//        //}
+//        console.debug(that.selectedOption)
+//    };
 
     /*this.options = this.tags.map(function (element) {
         // JQuery.UI.AutoComplete expects label & value properties, but we can add our own
