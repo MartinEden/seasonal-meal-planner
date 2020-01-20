@@ -14,6 +14,7 @@ urlpatterns = [
     path('category/<str:category>/', views.category, name='category'),
     path('category', views.category, name='all_categories'),
     path('plan-week', views.plan_week, name='plan_week'),
+    path('generate-menu', views.generate_menu, name='generate_menu'),
     path('sidedish/<str:sidedish>/<int:month_id>/', views.sidedish,
          name='sidedish'),
     path('sidedish/<str:sidedish>/', views.sidedish, name='sidedish'),

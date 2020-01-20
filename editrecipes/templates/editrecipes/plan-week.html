@@ -50,64 +50,63 @@
                         <ul data-bind="foreach: guests" class="list-inline">
                             <li class="list-inline-item">
                                 <span data-bind="text: dinerName"></span>
-                                <button type="button" class="btn btn-light" data-bind="click: $parent.removeGuest">X</button>
+                                <button type="button" class="btn btn-light" data-bind="click: $parent.removeGuest">X
+                                </button>
                             </li>
                         </ul>
+                    </td>
+                    <td data-bind="using: recipe">
+                        <span data-bind="text: name"></span>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 
-    <!-- All guests - drag from here -->
+<!-- All guests - drag from here -->
+
+<div class="row">
     <div class="col-12 mt-3">
         <h2>People</h2>
         <ul data-bind="foreach: people" class="list-inline">
             <li class="list-inline-item" data-bind="text: dinerName, drag: { value: $data }"></li>
         </ul>
     </div>
+</div>
 
+<div class="row">
     <div class="col-12 mt-3">
         <h2>Constraints</h2>
-        <div class="col-12 mt-3">
-            Maximum one per week of...
-            <!--<ul data-bind="foreach: chosenMaxTags" class="list-inline">
-                <li class="list-inline-item" data-bind="text: name"></li>
-            </ul>-->
-        </div>
-        <select data-bind="options: maxTags, selectedOptions: chosenMaxTags, optionsText: 'name'" multiple="true"></select>
-        <div class="col-12 mt-3">
-            Minimum one per week of...
-<!--            <ul data-bind="foreach: chosenMinTags" class="list-inline">-->
-<!--                <li class="list-inline-item" data-bind="text: name"></li>-->
-<!--            </ul>-->
-        </div>
-        <select data-bind="options: minTags, selectedOptions: chosenMinTags, optionsText: 'name'" multiple="true"></select>
+    </div>
+</div>
 
-<!--        <div class="col-12 mt-3">-->
-<!--            <ul data-bind="foreach: chosenTags" class="list-inline">-->
-<!--                <li class="list-inline-item" data-bind="text: name"></li>-->
-<!--            </ul>-->
-<!--        </div>-->
-        <!--        <ul data-bind="foreach: tags" class="list-inline" id="max_once">-->
-<!--            <li class="list-inline-item">At most one:<span data-bind="text: label"></span></li>-->
+<div class="row">
+    <div class="col-6 col-lg-3">
+        <p>Maximum one per week of...</p>
+        <select data-bind="options: maxTags, selectedOptions: chosenMaxTags, optionsText: 'name'"
+                multiple="true"></select>
+    </div>
+    <div class="col-6 col-lg-3">
+        <p>Minimum one per week of...</p>
+        <select data-bind="options: minTags, selectedOptions: chosenMinTags, optionsText: 'name'"
+                multiple="true"></select>
+    </div>
+</div>
 
-        <!--include "tag-constraint.html" -->
+<!--include "tag-constraint.html" -->
 <!--         <label for = "autocomplete-ingredient">Use up ingredients: </label>
           <input id = "autocomplete-ingredient">
           <label for = "autocomplete-ingredient-2">Consider ingredients: </label>
           <input id = "autocomplete-ingredient-2">
         -->
-    </div>
+<div>
+    [Additional per-meal requirements e.g. cooking time; to be added later, currently no info in meal planner]
 </div>
-
-    <div>
-        [Additional per-meal requirements e.g. cooking time; to be added later, currently no info in meal planner]
-    </div>
-    <button>Generate menu</button>
-    [Button - select randomly correct quantity of meals that meet requirements]
-    <div>
-        [Display results]
-    </div>
-    {% endblock %}
+<button data-bind="click: generateMenu" data-url="{% url 'generate_menu' %}">Generate menu</button>
+[Button - select randomly correct quantity of meals that meet requirements]
+<div>
+    [Display results]
+</div>
+{% endblock %}

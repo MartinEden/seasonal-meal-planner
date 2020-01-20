@@ -1,11 +1,16 @@
+import jsonpickle
+from django.core import serializers
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 import json
 
+from django.views.decorators.http import require_POST
+
 from editrecipes.helpers import get_month, MonthRecipes
-from editrecipes.viewmodels import RecipeWithSeasonality
+from editrecipes.viewmodels_weekplan import WeekPlan
 from .models import Recipe, Month, Tag, DishType, SideDish, Ingredient, \
     IngredientQuantity, Aisle, Guest
 
@@ -160,6 +165,15 @@ def plan_week(request):
     guests = [{"id": g.id, "name": g.name} for g in Guest.objects.all()]
     return render(request, 'editrecipes/plan-week.html', {"tags": tags, "ingredients": ingredients, "guests": guests})
 
+@require_POST
+def generate_menu(request):
+    print("step 1")
+    data = json.loads(request.body)
+    plan = WeekPlan(data)
+    print("model constructed")
+    data = jsonpickle.encode(plan, unpicklable=False)
+    print("serialized")
+    return HttpResponse(data, content_type='application/json')
 
 @login_required
 def sort_into_aisles(request, aisle=None):

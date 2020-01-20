@@ -13,7 +13,7 @@ def get_month(month_id=None):
 
 
 class MonthRecipes(object):
-    def __init__(self, month_id):
+    def __init__(self, month_id=get_month().id):
         def sort(r):
             return (-r.in_season(month_id),
                     r.length_time_in_season(),
