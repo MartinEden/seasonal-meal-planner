@@ -64,9 +64,6 @@ function WeekPlan() {
     this.toDate = ko.observable(new DateModel(+7));
     this.days = ko.observableArray();
 
-    this.fromDate.subscribe(function() { that.updateDays() });
-    this.toDate.subscribe(function() { that.updateDays() });
-
     this.updateDays = function() {
         that.days.removeAll();
         var date = that.fromDate().value();
@@ -76,6 +73,10 @@ function WeekPlan() {
         }
     }
     this.updateDays();
+
+    this.fromDate().value.subscribe(function() { that.updateDays() });
+    this.toDate().value.subscribe(function() { that.updateDays() });
+
 
     this.people = ko.observableArray([]);
     var allPeople = JSON.parse(document.getElementById('guests-data').textContent);
