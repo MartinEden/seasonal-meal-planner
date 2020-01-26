@@ -18,6 +18,7 @@ class Day:
         self.guests = data["guests"]
         self.meals = []
         self.recipe = ChosenMeal()
+        self.preprepared = data["preprepared"]
 
 
 class Constraint:
@@ -59,6 +60,7 @@ class WeekPlan:
 
         try:
             self.assign_to_days()
+            # Missing feature: not two meals of same category in a week
         except IndexError:
             self.potential_to_menu(recipes.all)
             try:
@@ -75,20 +77,28 @@ class WeekPlan:
             self.menu.append(meal)
 
     def assign_to_days(self):
-        leftovers = None
+        leftovers = {}
         tags = defaultdict(int)
         for day in self.days:
-            if leftovers and not any(day.guests):
-                day.recipe.name = leftovers
-                leftovers = None
+            meals = [m for m in leftovers.keys() if leftovers[m] >= 2]
+            if not any(day.guests) and any(meals):
+                meal = meals[0]
+                day.recipe.name = meal
+                if leftovers[meal] >= 2:
+                    leftovers[meal] = leftovers[meal] - 2
+                else:
+                    leftovers.pop(meal)
             else:
                 (meal, tags) = self.get_meal_meeting_max_constraints(day, tags)
                 day.recipe.name = meal.name
-                leftovers = meal.name
+                leftovers[meal.name] = meal.feeds - (len(day.guests) + 2)
+                if leftovers[meal.name] < 2:
+                    leftovers.pop(meal.name)
+
 
     def get_meal_meeting_max_constraints(self, day, tags):
         that_tags = tags
-        i = self.skip_problem_meals(day.guests, 0)
+        i = self.skip_problem_meals(day.preprepared, day.guests, 0)
         meal = self.menu.pop(i)
         for tag in meal.tags():
             that_tags[tag] += 1
@@ -98,13 +108,16 @@ class WeekPlan:
 
         return meal, that_tags
 
-    def skip_problem_meals(self, guests, i):
+    def skip_problem_meals(self, preprepared, guests, i):
+        if preprepared and (self.menu[i].can_be_made_in_advance is False):
+            i += 1
+            return self.skip_problem_meals(preprepared, guests, i)
         for guest in [Guest.objects.get(name=g["dinerName"]) for g in guests]:
             for tag in [tag.name for tag in guest.problem_tags.all()]:
                 if tag in [t.name for t in self.menu[i].tags()]:
                     print(tag + " is problematic for " + guest.name + "; skipping " + self.menu[i].name)
                     i += 1
-                    return self.skip_problem_meals(guests, i)
+                    return self.skip_problem_meals(preprepared, guests, i)
         return i
 
     def __getstate__(self):

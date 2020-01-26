@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
@@ -39,6 +41,7 @@ class DishType(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Aisle(models.Model):
     number = models.IntegerField()
@@ -110,6 +113,9 @@ class Recipe(models.Model):
     category = models.ForeignKey('DishType', on_delete=models.CASCADE,
                                  blank=True, null=True, related_name='recipes')
     sidedish = models.ManyToManyField(SideDish, blank=True)
+    feeds = models.IntegerField()
+    time = models.DurationField()
+    can_be_made_in_advance = models.BooleanField(default=False)
 
     @mproperty
     def months_in_season(self):

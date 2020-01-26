@@ -12,6 +12,7 @@ function Day(name) {
     this.name = ko.observable(name);
     this.guests = ko.observableArray();
     this.recipe = ko.observable(new Recipe());
+    this.preprepared = ko.observable(false);
 
     this.latestGuest = ko.computed({
         read: function() {

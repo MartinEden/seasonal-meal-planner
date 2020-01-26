@@ -41,6 +41,7 @@
                 <tr>
                     <th></th>
                     <th>People</th>
+                    <th>Make in advance?</th>
                     <th>Meal</th>
                 </tr>
                 <tbody data-bind="foreach: days">
@@ -54,6 +55,9 @@
                                 </button>
                             </li>
                         </ul>
+                    </td>
+                    <td>
+                        <input type="checkbox" data-bind="checked: preprepared" />
                     </td>
                     <td data-bind="using: recipe">
                         <span data-bind="text: name"></span>
