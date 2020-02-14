@@ -78,6 +78,29 @@ def tag_chart(request):
 
 
 @login_required
+def ingredient_tags(request):
+    data = {
+        'ingredients': [{"name": i.name, "tags": [t.name for t in i.tags.all()]} for i in Ingredient.objects.all()],
+        'tags': [t.name for t in Tag.objects.all()]
+    }
+    return render(request, 'editrecipes/ingredient_tags.html', data)
+
+
+@require_POST
+def update_tags(request):
+    data = json.loads(request.body)
+    ingredient = Ingredient.objects.get(name==data["ingredient"])
+    tag = Tag.objects.get(name==data["tag"])
+    add = data["was_added"]
+    if add:
+        ingredient.tags.append(tag)
+    else:
+        ingredient.tags.remove(tag)
+    ingredient.save()
+    return True
+
+
+@login_required
 def month(request, month_id=None):
     recipes = MonthRecipes(month_id)
     always_available_recipes = recipes.evergreen_recipes_that_peak_this_month()
@@ -165,6 +188,7 @@ def plan_week(request):
     guests = [{"id": g.id, "name": g.name} for g in Guest.objects.all()]
     return render(request, 'editrecipes/plan-week.html', {"tags": tags, "ingredients": ingredients, "guests": guests})
 
+
 @require_POST
 def generate_menu(request):
     print("step 1")
@@ -174,6 +198,7 @@ def generate_menu(request):
     data = jsonpickle.encode(plan, unpicklable=False)
     print("serialized")
     return HttpResponse(data, content_type='application/json')
+
 
 @login_required
 def sort_into_aisles(request, aisle=None):

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'editrecipes/scripts/ingredient-tags.js' %}"></script>
+{{ ingredients|json_script:"ingredients-data" }}
+{{ tags|json_script:"tags-data" }}
+<script type="text/javascript">
+  $(function() {
+    ko.applyBindings(new IngredientTags());
+  });
+
+
+</script>
+{% endblock %}
+
+{% block title %}Ingredient tags{% endblock %}
+
+{% block content %}
+<button data-bind="click: assignTags" data-url="{% url 'update_tags' %}">Save changes</button>
+<table class="table table-striped table-compressed">
+    <tr>
+        <th>Ingredient \ tag</th>
+        <!-- ko foreach: tags -->
+            <td class="p-2" data-bind="text: $data"></td>
+        <!-- /ko -->
+    </tr>
+    <tbody data-bind="foreach: ingredients">
+    <tr>
+        <td data-bind="text: name">
+        </td>
+        <!-- ko foreach:$parent.tags -->
+        <td>
+            <input type="checkbox" data-bind="value:$data, checked:$parent.applicableTags"/>
+        </td>
+        <!-- /ko -->
+    </tr>
+    </tbody>
+</table>
+{% endblock %}

@@ -11,6 +11,8 @@ urlpatterns = [
     path('month', views.month),
     path('year-chart', views.year_chart, name='year_chart'),
     path('tag-chart', views.tag_chart, name='tag_chart'),
+    path('ingredient_tags', views.ingredient_tags, name='ingredient_tags'),
+    path('update_tags', views.update_tags, name='update_tags'),
     path('category/<str:category>/', views.category, name='category'),
     path('category', views.category, name='all_categories'),
     path('plan-week', views.plan_week, name='plan_week'),

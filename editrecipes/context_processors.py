@@ -9,13 +9,14 @@ class NavItem(object):
 
 static_nav = [
     NavItem('Home', 'index'),
-    NavItem('Yearly chart', 'year_chart'),
-    NavItem('Tag chart', 'tag_chart'),
-    NavItem('Dishes by category', 'all_categories'),
-    NavItem('Sidedishes', 'all_sidedishes'),
     NavItem('Plan week', 'plan_week'),
     NavItem('Make a shopping list', 'select_recipes'),
     NavItem('Search by ingredient', 'search'),
+    NavItem('Dishes by category', 'all_categories'),
+    NavItem('Yearly chart', 'year_chart'),
+    NavItem('Tag chart', 'tag_chart'),
+    NavItem('Ingredient tags', 'ingredient_tags'),
+    NavItem('Sidedishes', 'all_sidedishes'),
     NavItem('Ingredients', 'ingredients')
 ]
 
