@@ -13,6 +13,7 @@ function Day(name) {
     this.guests = ko.observableArray();
     this.recipe = ko.observable(new Recipe());
     this.preprepared = ko.observable(false);
+    this.maxTime = ko.observable("");
 
     this.latestGuest = ko.computed({
         read: function() {
@@ -88,12 +89,12 @@ function WeekPlan() {
     var allTags = JSON.parse(document.getElementById('tags-data').textContent);
     this.maxTags = ko.observableArray();
     for (t in allTags) {
-        this.maxTags.push(new TagConstraint(allTags[t], 1, 0));
+        this.maxTags.push(new TagConstraint(allTags[t], 1, null));
     }
     this.chosenMaxTags = ko.observableArray();
     this.minTags = ko.observableArray();
     for (t in allTags) {
-        this.minTags.push(new TagConstraint(allTags[t], 0, 1));
+        this.minTags.push(new TagConstraint(allTags[t], null, 1));
     }
     this.chosenMinTags = ko.observableArray();
 

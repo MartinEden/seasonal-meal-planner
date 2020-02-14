@@ -42,6 +42,7 @@
                     <th></th>
                     <th>People</th>
                     <th>Make in advance?</th>
+                    <th>Max time</th>
                     <th>Meal</th>
                 </tr>
                 <tbody data-bind="foreach: days">
@@ -58,6 +59,9 @@
                     </td>
                     <td>
                         <input type="checkbox" data-bind="checked: preprepared" />
+                    </td>
+                    <td>
+                        <input type="text" data-bind="text: maxTime"/>
                     </td>
                     <td data-bind="using: recipe">
                         <span data-bind="text: name"></span>
@@ -105,12 +109,5 @@
           <label for = "autocomplete-ingredient-2">Consider ingredients: </label>
           <input id = "autocomplete-ingredient-2">
         -->
-<div>
-    [Additional per-meal requirements e.g. cooking time; to be added later, currently no info in meal planner]
-</div>
 <button data-bind="click: generateMenu" data-url="{% url 'generate_menu' %}">Generate menu</button>
-[Button - select randomly correct quantity of meals that meet requirements]
-<div>
-    [Display results]
-</div>
 {% endblock %}

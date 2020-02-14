@@ -1,3 +1,4 @@
+import datetime
 import random
 from collections import defaultdict
 from math import ceil
@@ -14,11 +15,13 @@ class ChosenMeal:
 
 class Day:
     def __init__(self, data):
+        print(data)
         self.name = data["name"]
         self.guests = data["guests"]
         self.meals = []
         self.recipe = ChosenMeal()
         self.preprepared = data["preprepared"]
+        self.maxTime = datetime.timedelta(minutes=int(data["maxTime"])) if data["maxTime"] is True else None
 
 
 class Constraint:
@@ -27,6 +30,9 @@ class Constraint:
         self.max = data["max"]
         self.min = data["min"]
         self.recipe = None
+
+    def __str__(self):
+        return str(self.min) + "<" + self.name + "<" + str(self.max)
 
 
 class WeekPlan:
@@ -39,7 +45,7 @@ class WeekPlan:
         recipes = MonthRecipes()
 
         potential_recipes = []
-        for constraint in [c for c in self.constraints]:
+        for constraint in [c for c in self.constraints if c.min is not None]:
             matching_recipes = [r for r in recipes.all if constraint.name in [t.name for t in r.tags()]]
             i = 0
             while i < constraint.min:
@@ -95,29 +101,33 @@ class WeekPlan:
                 if leftovers[meal.name] < 2:
                     leftovers.pop(meal.name)
 
-
     def get_meal_meeting_max_constraints(self, day, tags):
         that_tags = tags
-        i = self.skip_problem_meals(day.preprepared, day.guests, 0)
+        i = self.skip_problem_meals(day.maxTime, day.preprepared, day.guests, 0)
         meal = self.menu.pop(i)
         for tag in meal.tags():
-            that_tags[tag] += 1
-        for c in [c for c in self.constraints if c.name in tags]:
-            if that_tags[c.name] > c.max:
-                return self.get_meal_meeting_max_constraints(tags)
+            that_tags[tag.name] += 1
+        for c in [c for c in self.constraints if c.max is not None]:
+            if c.name in tags:
+                if that_tags[c.name] > c.max:
+                    print(meal.name + " violates " + c.name)
+                    return self.get_meal_meeting_max_constraints(day, tags)
 
         return meal, that_tags
 
-    def skip_problem_meals(self, preprepared, guests, i):
+    def skip_problem_meals(self, max_time, preprepared, guests, i):
         if preprepared and (self.menu[i].can_be_made_in_advance is False):
             i += 1
-            return self.skip_problem_meals(preprepared, guests, i)
+            return self.skip_problem_meals(max_time, preprepared, guests, i)
+        if max_time and self.menu[i].time > max_time:
+            i += 1
+            return self.skip_problem_meals(max_time, preprepared, guests, i)
         for guest in [Guest.objects.get(name=g["dinerName"]) for g in guests]:
             for tag in [tag.name for tag in guest.problem_tags.all()]:
                 if tag in [t.name for t in self.menu[i].tags()]:
                     print(tag + " is problematic for " + guest.name + "; skipping " + self.menu[i].name)
                     i += 1
-                    return self.skip_problem_meals(preprepared, guests, i)
+                    return self.skip_problem_meals(max_time, preprepared, guests, i)
         return i
 
     def __getstate__(self):
