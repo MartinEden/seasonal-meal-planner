@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.db import models
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.db.models.functions import Lower
 from memoize import mproperty
 
 
@@ -12,6 +13,7 @@ def months_ago(now, then):
 
 class Month(models.Model):
     month = models.CharField(max_length=10)
+
     def previous(self):
         id = (self.id - 1) % 12
         id = id if id != 0 else 12
@@ -66,7 +68,7 @@ class Ingredient(models.Model):
         return self.seasonal.filter(id=month_id)
 
     class Meta:
-        ordering = ["name"]
+        ordering = [Lower("name")]
 
     def __str__(self):
         return self.name
@@ -84,7 +86,7 @@ class UnitConversion(models.Model):
                                   related_name='convert_from_unit')
     to_unit = models.ForeignKey(Unit, on_delete=models.DO_NOTHING,
                                 related_name='convert_to_unit')
-    conversion_factor = models.DecimalField(max_digits = 6, decimal_places=2)
+    conversion_factor = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
         return "1%s = %s%s" % (self.from_unit, self.conversion_factor, self.to_unit)
@@ -108,8 +110,8 @@ class Recipe(models.Model):
     name = models.CharField(max_length=200)
     url = models.CharField(max_length=200, blank=True)
     ingredients = models.ManyToManyField(Ingredient,
-                                                  through="IngredientQuantity",
-                                                  related_name='recipes')
+                                         through="IngredientQuantity",
+                                         related_name='recipes')
     category = models.ForeignKey('DishType', on_delete=models.CASCADE,
                                  blank=True, null=True, related_name='recipes')
     sidedish = models.ManyToManyField(SideDish, blank=True)
@@ -166,7 +168,7 @@ class Recipe(models.Model):
         return self.name
 
     class Meta:
-        ordering = ["name"]
+        ordering = [Lower("name")]
 
 
 class IngredientQuantity(models.Model):
@@ -176,7 +178,7 @@ class IngredientQuantity(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     unit = models.ForeignKey(Unit,
                              default=0,
-                                 on_delete=models.DO_NOTHING)
+                             on_delete=models.DO_NOTHING)
 
     class Meta:
         verbose_name = "Quantity of ingredient"
@@ -211,6 +213,7 @@ class Guest(models.Model):
     def __str__(self):
         return self.name
 
+
 # class RecipeIngredientQuantity(models.Model):
 #    recipe = models.ForeignKey(Recipe)
 #    ingredient = models.ForeignKey(Ingredient)
@@ -230,3 +233,5 @@ class RecipesAdmin(admin.ModelAdmin):
             "Ingredient", False)},
     }
     inlines = (IngredientQuantityInline,)
+    list_display = ("name", "category", "feeds", "time", "can_be_made_in_advance")
+    list_editable = ("category", "feeds", "time", "can_be_made_in_advance")
