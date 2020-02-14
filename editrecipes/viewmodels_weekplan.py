@@ -110,6 +110,8 @@ class WeekPlan:
         for c in [c for c in self.constraints if c.max is not None]:
             if c.name in tags:
                 if that_tags[c.name] > c.max:
+                    for tag in meal.tags():
+                        that_tags[tag.name] -= 1
                     print(meal.name + " violates " + c.name)
                     return self.get_meal_meeting_max_constraints(day, tags)
 
