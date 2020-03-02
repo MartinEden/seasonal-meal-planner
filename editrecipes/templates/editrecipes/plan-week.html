@@ -5,13 +5,13 @@
 <script type="text/javascript" src="{% static 'editrecipes/scripts/datepicker.js' %}"></script>
 <script type="text/javascript" src="{% static 'editrecipes/scripts/planweek.js' %}"></script>
 <script type="text/javascript" src="{% static 'editrecipes/scripts/knockoutjs-drag-n-drop.js' %}"></script>
-<!--<script type="text/javascript" src="{% static 'editrecipes/scripts/knockoutjs-autocomplete.js' %}"></script>-->
 {{ guests|json_script:"guests-data" }}
 {{ tags|json_script:"tags-data" }}
 <script type="text/javascript">
   $(function() {
     setupDatePickers();
-    ko.applyBindings(new WeekPlan());
+    plan = new WeekPlan("{% url 'generate_menu' %}");
+    ko.applyBindings(plan);
   });
 </script>
 {% endblock %}
@@ -32,7 +32,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="row">
     <div class="row mt-5">
@@ -109,5 +108,4 @@
           <label for = "autocomplete-ingredient-2">Consider ingredients: </label>
           <input id = "autocomplete-ingredient-2">
         -->
-<button data-bind="click: generateMenu" data-url="{% url 'generate_menu' %}">Generate menu</button>
 {% endblock %}

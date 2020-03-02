@@ -60,8 +60,9 @@ function TagConstraint(name, max, min) {
     this.min = ko.observable(min)
 }
 
-function WeekPlan() {
+function WeekPlan(submissionUrl) {
     var that = this;
+    this.submissionUrl = submissionUrl;
     this.fromDate = ko.observable(new DateModel(+1));
     this.toDate = ko.observable(new DateModel(+7));
     this.days = ko.observableArray();
@@ -76,8 +77,12 @@ function WeekPlan() {
     }
     this.updateDays();
 
-    this.fromDate().value.subscribe(function() { that.updateDays() });
-    this.toDate().value.subscribe(function() { that.updateDays() });
+    this.fromDate().value.subscribe(function() {
+        that.updateDays()
+    });
+    this.toDate().value.subscribe(function() {
+        that.updateDays()
+    });
 
 
     this.people = ko.observableArray([]);
@@ -105,20 +110,37 @@ function WeekPlan() {
         owner: this
     });
 
-    this.generateMenu = function(data, event) {
-        var url = $(event.target).data("url");
+    this.jsonSummary = ko.computed({
+        read: function() {
+            return ko.toJSON(that, function(key, value) {
+                if (key == "jsonSummary" || key == "recipe")  {
+                    return;
+                }
+                else {
+                    return value;
+                }
+            });
+        }
+    });
+    this.jsonSummary.extend({ rateLimit: 1000, deferred: true }).subscribe(function() {
+        that.generateMenu()
+    });
+
+    this.generateMenu = function() {
         var csrftoken = Cookies.get('csrftoken');
-        $.ajax(url, {
-            data: ko.toJSON(that),
+        $.ajax(that.submissionUrl, {
+            data: that.jsonSummary(),
             contentType: 'application/json',
             headers: {
                 "X-CSRFToken": csrftoken
             },
             type: 'POST',
-            success: function(data, textStatus, jqXHR){
+            success: function(data, textStatus, jqXHR) {
                 for (index in data["days"]) {
                     var dayData = data["days"][index];
-                    var day = getFromArrayWhere(that.days(), function(x) { return x.name() == dayData.name; });
+                    var day = getFromArrayWhere(that.days(), function(x) {
+                        return x.name() == dayData.name;
+                    });
                     if (day != null) {
                         day.recipe(dayData.recipe);
                     }
