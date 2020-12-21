@@ -64,18 +64,32 @@ input[type=number]{
     width: 3em;
 }
 
-.ui-draggable
-{
-cursor: grab;
-border-style: solid;
-border-color: rgb(200,200,200);
-border-width: thin;
-border-radius: 0.3em;
-padding: 0.1em;
-background-color: white;
+.ui-draggable {
+    cursor: grab;
+    border-style: solid;
+    border-color: rgb(200,200,200);
+    border-width: thin;
+    border-radius: 0.3em;
+    padding: 0.1em;
+    background-color: white;
 }
 
-.ui-dragon
-{
-cursor: grabbing;
+.ui-dragon {
+    cursor: grabbing;
+}
+
+.floating-actions {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+.floating-actions a {
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    border-radius: 40px;
+    white-space: normal;
+    font-weight: bold;
+    background: rgb(0, 123, 255); /* same as bg-primary */
 }
