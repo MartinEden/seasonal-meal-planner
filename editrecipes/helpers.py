@@ -52,4 +52,4 @@ class MonthRecipes(object):
             recipes[r.name].just_in = True
         for r in self.this_but_not_next():
             recipes[r.name].last_chance = True
-        return recipes.values()
+        return sorted(recipes.values(), key=lambda r: (-r.last_chance, -r.just_in, r.name))

@@ -4,7 +4,10 @@
 
 {% block content %}
 {% if recipe %}
-<div><span>Feeds: {{recipe.feeds}}</span><span>Total time: {{recipe.time}}</span></div>
+<div><span>Feeds: {{recipe.feeds}}</span><span>&nbsp &nbsp</span>
+    <span>Total time: {{recipe.time}}</span><span>&nbsp &nbsp</span>
+    <span>{% for c in recipe.courses.all %}{{c}}{% endfor%}</span>
+</div>
     {% if valid_url %}
         <div>
             <a href="{{recipe.url}}">{{recipe.url}}</a>

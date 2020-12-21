@@ -84,6 +84,7 @@ function WeekPlan(submissionUrl) {
         that.updateDays()
     });
 
+    this.mostRecent = ko.observable(new DateModel(-7));
 
     this.people = ko.observableArray([]);
     var allPeople = JSON.parse(document.getElementById('guests-data').textContent);

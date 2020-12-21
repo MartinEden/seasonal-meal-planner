@@ -23,6 +23,13 @@ function setupDatePickers() {
 		})
 		.on("change", function() {
 			from.datepicker("option", "maxDate", getDate(this));
+        }),
+		to = $("#mostRecent").datepicker({
+			showButtonPanel: true,
+			hideIfNoPrevNext: true,
+		})
+		.on("change", function() {
+			mostRecent.datepicker("option", "mostRecent", getDate(this));
 		});
 }
 

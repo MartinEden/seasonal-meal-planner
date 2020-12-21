@@ -106,12 +106,20 @@ class SideDish(models.Model):
         return self.name
 
 
+class Course(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Recipe(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     url = models.CharField(max_length=200, blank=True)
     ingredients = models.ManyToManyField(Ingredient,
                                          through="IngredientQuantity",
                                          related_name='recipes')
+    course = models.ManyToManyField(Course, related_name='courses'),
     category = models.ForeignKey('DishType', on_delete=models.CASCADE,
                                  blank=True, null=True, related_name='recipes')
     sidedish = models.ManyToManyField(SideDish, blank=True)
@@ -199,8 +207,19 @@ class IngredientQuantity(models.Model):
 
 
 class Recent(models.Model):
-    meal = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    meal = models.OneToOneField(Recipe, on_delete=models.CASCADE)
     date = models.DateField()
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return "%s: %s" % (self.date, self.meal)
+
+    def get_meals_since(date):
+        recent_meals = Recent.objects.filter(date__gte=date)
+        #print(recent_meals)
+        return recent_meals
 
 
 class Guest(models.Model):

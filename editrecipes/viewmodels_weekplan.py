@@ -4,7 +4,7 @@ from collections import defaultdict
 from math import ceil
 
 from editrecipes.helpers import MonthRecipes
-from editrecipes.models import Recipe, Guest
+from editrecipes.models import Recipe, Guest, Recent
 from editrecipes.viewmodels import RecipeWithSeasonality
 
 
@@ -39,6 +39,7 @@ class WeekPlan:
     def __init__(self, data):
         self.days = [Day(day) for day in data["days"]]
         self.constraints = [Constraint(c) for c in data["chosenTags"]]
+        self.mostRecent = (data["mostRecent"]["value"]).strip()[:9]
 
         # self.number_of_meals = ceil(len(self.days) / 2)
         self.menu = []
@@ -64,6 +65,8 @@ class WeekPlan:
         self.potential_to_menu(potential)
         self.potential_to_menu([r for r in recipes.evergreen_recipes_that_peak_this_month()])
 
+        self.remove_recent_meals()
+
         try:
             self.assign_to_days()
             # Missing feature: not two meals of same category in a week
@@ -74,6 +77,16 @@ class WeekPlan:
             except IndexError:
                 raise IndexError("Not enough meal options!")
 
+    def remove_recent_meals(self):
+        for meal in self.menu:
+            try:
+                recent = Recent.get_meals_since(self.mostRecent).get(meal=meal)
+                self.menu.remove(meal)
+                print(meal.name + " was recent, removed")
+            except Recent.DoesNotExist:
+                print(meal.name + " not recent")
+        print(self.menu)
+        
     def potential_to_menu(self, potential):
         random.shuffle(potential)
         while len(potential) > 0:
