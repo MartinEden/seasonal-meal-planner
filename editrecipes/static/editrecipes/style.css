@@ -93,3 +93,7 @@ input[type=number]{
     font-weight: bold;
     background: rgb(0, 123, 255); /* same as bg-primary */
 }
+
+.recent-recipe {
+    opacity: 0.6;
+}

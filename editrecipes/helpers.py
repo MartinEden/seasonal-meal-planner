@@ -45,6 +45,12 @@ class MonthRecipes(object):
             if r.always_available() and self.month in r.months_in_peak_season:
                 yield r
 
+    def eaten_recently(self):
+        for r in self.this_months_recipes():
+            print(r)
+            if r.recently_eaten() is not None and r.recently_eaten() >= (datetime.date.today() - datetime.timedelta(days = 14)):
+                yield r
+
     def seasonal_recipes(self):
         recipes = dict((r.name, RecipeWithSeasonality(r)) for r in
                        self.this_months_recipes())
@@ -52,4 +58,6 @@ class MonthRecipes(object):
             recipes[r.name].just_in = True
         for r in self.this_but_not_next():
             recipes[r.name].last_chance = True
-        return sorted(recipes.values(), key=lambda r: (-r.last_chance, -r.just_in, r.name))
+        for r in self.eaten_recently():
+            recipes[r.name].eaten_recently = True
+        return sorted(recipes.values(), key=lambda r: (r.eaten_recently, -r.last_chance, -r.just_in, r.name))

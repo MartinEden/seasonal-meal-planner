@@ -35,8 +35,10 @@
                             {% if recipe.last_chance %}
                             <img src="{% static 'editrecipes/clock.svg' %}" alt="Last chance" title="Last chance">
                             {% endif %}
-
-                            <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+                            <a href="{% url 'recipe' recipe.name %}"
+                            {% if recipe.eaten_recently %}
+                               class="recent-recipe"
+                            {% endif %}>{{ recipe.name }}</a>
                         </span>
                         <span class="badge badge-primary badge-pill">
                             {% if recipe.category %}{{recipe.category}}{% endif %}
@@ -51,7 +53,11 @@
                     {% for recipe in always_available_recipes %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>
-                                <a href="{% url 'recipe' recipe.name %}">{{ recipe.name }}</a>
+                                <a href="{% url 'recipe' recipe.name %}"
+                                {% if recipe.eaten_recently %}
+                                    class="recent-recipe"
+                                {% endif %}
+                                >{{ recipe.name }}</a>
                             </span>
                             <span class="badge badge-primary badge-pill">
                                 {% if recipe.category %}{{recipe.category}}{% endif %}

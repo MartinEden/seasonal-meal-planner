@@ -8,3 +8,4 @@ class RecipeWithSeasonality(object):
         self.recipepk = recipe.pk
         self.just_in = False
         self.last_chance = False
+        self.eaten_recently = False

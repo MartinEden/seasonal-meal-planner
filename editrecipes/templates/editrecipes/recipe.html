@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-
+{% block title-tag %}{{ recipe.name }}{% endblock %}
 {% block title %}{{ recipe.name }}{% endblock %}
 
 {% block content %}
 {% if recipe %}
 <div><span>Feeds: {{recipe.feeds}}</span><span>&nbsp &nbsp</span>
     <span>Total time: {{recipe.time}}</span><span>&nbsp &nbsp</span>
+    <span>Last eaten: {{recipe.recently_eaten}}</span>
     <span>{% for c in recipe.courses.all %}{{c}}{% endfor%}</span>
 </div>
     {% if valid_url %}

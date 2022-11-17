@@ -143,6 +143,15 @@ class Recipe(models.Model):
                 months = months & i.peak.all()  # intersection
         return months
 
+    def recently_eaten(self):
+        dates = Recent.objects.filter(meal=self)
+        if len(dates) > 0:
+            print(dates[0])
+            return dates[0].date
+        else:
+            return None
+
+
     def always_available(self):
         if len(self.months_in_season) == 12:
             return True
